@@ -13,19 +13,22 @@ const chevron = (open: boolean) => (
 export default function Navbar() {
   const pathname = usePathname()
   const [settingOpen, setSettingOpen] = useState(false)
+  const [outflowOpen, setOutflowOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const settingRef = useRef<HTMLDivElement>(null)
+  const outflowRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (settingRef.current && !settingRef.current.contains(e.target as Node)) setSettingOpen(false)
+      if (outflowRef.current && !outflowRef.current.contains(e.target as Node)) setOutflowOpen(false)
     }
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
   // Close mobile menu on route change
-  useEffect(() => { setMobileOpen(false); setSettingOpen(false) }, [pathname])
+  useEffect(() => { setMobileOpen(false); setSettingOpen(false); setOutflowOpen(false) }, [pathname])
 
   const isActive = (path: string) => pathname === path
 
@@ -42,7 +45,29 @@ export default function Navbar() {
 
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-1 flex-1">
-          <Link href="/expenses/create" className={linkClass('/expenses/create')}>Create Expense</Link>
+          {/* Outflow dropdown */}
+          <div className="relative" ref={outflowRef}>
+            <button
+              onClick={() => setOutflowOpen((o) => !o)}
+              className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                pathname.startsWith('/expenses/create') || pathname.startsWith('/outflow')
+                  ? 'bg-blue-50 text-blue-700'
+                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+              }`}
+            >
+              Outflow {chevron(outflowOpen)}
+            </button>
+            {outflowOpen && (
+              <div className="absolute left-0 top-full mt-1 w-44 bg-white rounded-lg border border-gray-200 shadow-lg py-1 z-50">
+                <Link href="/expenses/create" onClick={() => setOutflowOpen(false)} className={`block px-4 py-2 text-sm ${pathname === '/expenses/create' ? 'text-blue-700 bg-blue-50' : 'text-gray-700 hover:bg-gray-50'}`}>
+                  Expense
+                </Link>
+                <Link href="/outflow/pemindahan-dana" onClick={() => setOutflowOpen(false)} className={`block px-4 py-2 text-sm ${pathname === '/outflow/pemindahan-dana' ? 'text-blue-700 bg-blue-50' : 'text-gray-700 hover:bg-gray-50'}`}>
+                  Pemindahan Dana
+                </Link>
+              </div>
+            )}
+          </div>
           <Link href="/expenses" className={linkClass('/expenses')}>Expenses</Link>
           <Link href="/income" className={linkClass('/income')}>Income</Link>
           <Link href="/monthly-check" className={linkClass('/monthly-check')}>Monthly Check</Link>
@@ -99,9 +124,15 @@ export default function Navbar() {
       {/* Mobile menu */}
       {mobileOpen && (
         <div className="md:hidden border-t border-gray-100 bg-white px-4 py-3 space-y-1">
-          <Link href="/expenses/create" className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/expenses/create') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
-            Create Expense
-          </Link>
+          <div className="pt-0 pb-1">
+            <p className="px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Outflow</p>
+            <Link href="/expenses/create" className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/expenses/create') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
+              Expense
+            </Link>
+            <Link href="/outflow/pemindahan-dana" className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/outflow/pemindahan-dana') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
+              Pemindahan Dana
+            </Link>
+          </div>
           <Link href="/expenses" className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/expenses') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
             Expenses
           </Link>
