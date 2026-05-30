@@ -53,7 +53,7 @@ export default function MonthlyCheckPage() {
       .eq('is_used', true)
       .single()
       .then(({ data }) => {
-        setTemplate(data as Template)
+        setTemplate(data as unknown as Template)
         setLoading(false)
       })
   }, [])
@@ -72,7 +72,7 @@ export default function MonthlyCheckPage() {
       .gte('date', firstDay)
       .lte('date', lastDay)
       .then(({ data }) => {
-        const monthExpenses: MonthExpense[] = (data as MonthExpense[]) ?? []
+        const monthExpenses: MonthExpense[] = (data as unknown as MonthExpense[]) ?? []
         const matchedIds = new Set<number>()
 
         template.template_details.forEach((detail) => {

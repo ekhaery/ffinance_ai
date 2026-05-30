@@ -49,7 +49,7 @@ export default function ExpensesPage() {
       .select('id, expense_name, amount, date, family_member, subcategory_id, subcategories(name, categories(name))')
       .order('date', { ascending: false })
       .order('id', { ascending: false })
-    setExpenses((data as Expense[]) ?? [])
+    setExpenses((data as unknown as Expense[]) ?? [])
     setLoading(false)
   }
 

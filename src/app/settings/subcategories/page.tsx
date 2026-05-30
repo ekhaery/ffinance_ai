@@ -25,7 +25,7 @@ export default function SubcategoriesPage() {
       supabase.from('subcategories').select('id, name, category_id, categories(name)').order('category_id').order('name'),
     ])
     setCategories(cats ?? [])
-    setSubcategories((subs as Subcategory[]) ?? [])
+    setSubcategories((subs as unknown as Subcategory[]) ?? [])
   }
 
   useEffect(() => { load() }, [])

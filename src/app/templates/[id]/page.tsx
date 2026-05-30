@@ -29,7 +29,7 @@ export default function ViewTemplatePage() {
       .select('template_name, created_at, template_details(id, name, amount, categories(name), subcategories(name))')
       .eq('id', id)
       .single()
-      .then(({ data }) => setData(data as TemplateData))
+      .then(({ data }) => setData(data as unknown as TemplateData))
   }, [id])
 
   if (!data) return <main className="p-12 text-sm text-gray-500">Loading…</main>

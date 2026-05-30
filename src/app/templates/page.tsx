@@ -15,7 +15,7 @@ export default function TemplateListPage() {
       .from('templates')
       .select('id, template_name, is_used, created_at, template_details(amount)')
       .order('created_at', { ascending: false })
-    setTemplates((data as Template[]) ?? [])
+    setTemplates((data as unknown as Template[]) ?? [])
     setLoading(false)
   }
 
