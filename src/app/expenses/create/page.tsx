@@ -17,9 +17,17 @@ export default function CreateExpensePage() {
     family_member: '',
     account_id: '',
   })
+
+  // Subcategory combobox
   const [subQuery, setSubQuery] = useState('')
   const [subOpen, setSubOpen] = useState(false)
   const subRef = useRef<HTMLDivElement>(null)
+
+  // Expense name autocomplete
+  const [nameSuggestions, setNameSuggestions] = useState<string[]>([])
+  const [nameOpen, setNameOpen] = useState(false)
+  const nameRef = useRef<HTMLDivElement>(null)
+
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [success, setSuccess] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -29,21 +37,82 @@ export default function CreateExpensePage() {
     supabase.from('accounts').select('id, name').order('name').then(({ data }) => setAccounts(data ?? []))
   }, [])
 
-  // Close dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (subRef.current && !subRef.current.contains(e.target as Node)) setSubOpen(false)
+      if (nameRef.current && !nameRef.current.contains(e.target as Node)) setNameOpen(false)
     }
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
+  // Autocomplete: fetch matching expense names as user types
+  useEffect(() => {
+    const q = form.expense_name.trim()
+    if (q.length < 1) { setNameSuggestions([]); setNameOpen(false); return }
+
+    supabase
+      .from('expenses')
+      .select('expense_name')
+      .ilike('expense_name', `%${q}%`)
+      .order('id', { ascending: false })
+      .limit(30)
+      .then(({ data }) => {
+        if (!data) return
+        // Deduplicate, exact matches first, then alphabetical
+        const seen = new Set<string>()
+        const exact: string[] = []
+        const others: string[] = []
+        data.forEach((r: { expense_name: string }) => {
+          const name = r.expense_name
+          if (seen.has(name)) return
+          seen.add(name)
+          if (name.toLowerCase() === q.toLowerCase()) exact.push(name)
+          else others.push(name)
+        })
+        others.sort((a, b) => a.localeCompare(b))
+        const suggestions = [...exact, ...others].slice(0, 8)
+        setNameSuggestions(suggestions)
+        setNameOpen(suggestions.length > 0)
+      })
+  }, [form.expense_name])
+
+  // Autofill from most recent matching expense
+  async function autofill(name: string) {
+    setForm((prev) => ({ ...prev, expense_name: name }))
+    setNameOpen(false)
+
+    const { data } = await supabase
+      .from('expenses')
+      .select('expense_name, amount, subcategory_id, account_id, family_member')
+      .eq('expense_name', name)
+      .order('id', { ascending: false })
+      .limit(1)
+      .single()
+
+    if (!data) return
+
+    // Find subcategory name for the combobox display
+    const sub = subcategories.find((s) => s.id === data.subcategory_id)
+
+    setForm((prev) => ({
+      ...prev,
+      amount: String(data.amount ?? ''),
+      subcategory_id: data.subcategory_id ? String(data.subcategory_id) : '',
+      account_id: data.account_id ? String(data.account_id) : '',
+      family_member: data.family_member ?? '',
+    }))
+
+    if (sub) setSubQuery(sub.name)
+  }
+
+  // Subcategory combobox
   const filteredSubs = subcategories.filter((s) =>
     s.name.toLowerCase().includes(subQuery.toLowerCase())
   )
-
   function selectSub(s: Subcategory) {
-    setForm({ ...form, subcategory_id: String(s.id) })
+    setForm((prev) => ({ ...prev, subcategory_id: String(s.id) }))
     setSubQuery(s.name)
     setSubOpen(false)
   }
@@ -89,7 +158,6 @@ export default function CreateExpensePage() {
             Expense saved successfully!
           </div>
         )}
-
         {errors.submit && (
           <div className="mb-5 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
             {errors.submit}
@@ -97,21 +165,42 @@ export default function CreateExpensePage() {
         )}
 
         <form onSubmit={handleSubmit} noValidate className="space-y-5">
+
+          {/* Expense Name with autocomplete */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Expense Name <span className="text-red-500">*</span>
             </label>
-            <input
-              type="text"
-              maxLength={255}
-              value={form.expense_name}
-              onChange={(e) => setForm({ ...form, expense_name: e.target.value })}
-              placeholder="e.g. Monthly Netflix"
-              className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 ${errors.expense_name ? 'border-red-400' : 'border-gray-300'}`}
-            />
+            <div className="relative" ref={nameRef}>
+              <input
+                type="text"
+                maxLength={255}
+                value={form.expense_name}
+                onChange={(e) => setForm({ ...form, expense_name: e.target.value })}
+                onFocus={() => nameSuggestions.length > 0 && setNameOpen(true)}
+                placeholder="e.g. Monthly Netflix"
+                autoComplete="off"
+                className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 ${errors.expense_name ? 'border-red-400' : 'border-gray-300'}`}
+              />
+              {nameOpen && nameSuggestions.length > 0 && (
+                <ul className="absolute z-30 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-52 overflow-y-auto text-sm">
+                  {nameSuggestions.map((name) => (
+                    <li
+                      key={name}
+                      onMouseDown={() => autofill(name)}
+                      className="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-blue-50 hover:text-blue-700 text-gray-700"
+                    >
+                      <span>{name}</span>
+                      <span className="text-xs text-gray-400 ml-2">autofill</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
             {errors.expense_name && <p className="mt-1 text-xs text-red-500">{errors.expense_name}</p>}
           </div>
 
+          {/* Amount */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Amount <span className="text-red-500">*</span>
@@ -138,7 +227,7 @@ export default function CreateExpensePage() {
                 value={subQuery}
                 onChange={(e) => {
                   setSubQuery(e.target.value)
-                  setForm({ ...form, subcategory_id: '' })
+                  setForm((prev) => ({ ...prev, subcategory_id: '' }))
                   setSubOpen(true)
                 }}
                 onFocus={() => setSubOpen(true)}
@@ -177,6 +266,7 @@ export default function CreateExpensePage() {
             {errors.subcategory_id && <p className="mt-1 text-xs text-red-500">{errors.subcategory_id}</p>}
           </div>
 
+          {/* Account chips */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Account</label>
             <div className="flex flex-wrap gap-2">
@@ -184,7 +274,7 @@ export default function CreateExpensePage() {
                 <button
                   key={a.id}
                   type="button"
-                  onClick={() => setForm({ ...form, account_id: form.account_id === String(a.id) ? '' : String(a.id) })}
+                  onClick={() => setForm((prev) => ({ ...prev, account_id: prev.account_id === String(a.id) ? '' : String(a.id) }))}
                   className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
                     form.account_id === String(a.id)
                       ? 'bg-blue-600 border-blue-600 text-white'
@@ -197,6 +287,7 @@ export default function CreateExpensePage() {
             </div>
           </div>
 
+          {/* Family Member chips */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Family Member</label>
             <div className="flex flex-wrap gap-2">
@@ -204,7 +295,7 @@ export default function CreateExpensePage() {
                 <button
                   key={m}
                   type="button"
-                  onClick={() => setForm({ ...form, family_member: form.family_member === m ? '' : m })}
+                  onClick={() => setForm((prev) => ({ ...prev, family_member: prev.family_member === m ? '' : m }))}
                   className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
                     form.family_member === m
                       ? 'bg-blue-600 border-blue-600 text-white'
