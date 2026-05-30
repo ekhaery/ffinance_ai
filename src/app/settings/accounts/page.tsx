@@ -54,7 +54,7 @@ export default function AccountsPage() {
     setDeleting(id)
     // Check if used by any income record
     const { count } = await supabase
-      .from('income')
+      .from('balance')
       .select('id', { count: 'exact', head: true })
       .eq('account_id', id)
     if (count && count > 0) {

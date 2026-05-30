@@ -46,7 +46,7 @@ export default function IncomePage() {
 
   async function load() {
     const { data } = await supabase
-      .from('income')
+      .from('balance')
       .select('id, amount, date, account_id, accounts(name)')
       .order('date', { ascending: false })
       .order('id', { ascending: false })
@@ -73,7 +73,7 @@ export default function IncomePage() {
     if (Object.keys(errs).length) { setFormErrors(errs); return }
     setFormErrors({})
     setSubmitting(true)
-    await supabase.from('income').insert({
+    await supabase.from('balance').insert({
       amount: Number(form.amount),
       account_id: Number(form.account_id),
       date: new Date().toISOString().slice(0, 10),
@@ -97,7 +97,7 @@ export default function IncomePage() {
   async function handleSave() {
     if (!editTarget || !editForm) return
     setSaving(true)
-    await supabase.from('income').update({
+    await supabase.from('balance').update({
       amount: Number(editForm.amount),
       account_id: Number(editForm.account_id),
       date: editForm.date,
@@ -113,7 +113,7 @@ export default function IncomePage() {
   async function handleDelete(id: number) {
     if (!confirm('Delete this income record?')) return
     setDeleting(id)
-    await supabase.from('income').delete().eq('id', id)
+    await supabase.from('balance').delete().eq('id', id)
     setDeleting(null)
     load()
   }
