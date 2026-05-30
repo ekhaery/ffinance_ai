@@ -14,7 +14,9 @@ type Expense = {
   date: string
   family_member: string | null
   subcategory_id: number
+  account_id: number | null
   subcategories: { name: string; categories: { name: string } }
+  accounts: { name: string } | null
 }
 
 type EditForm = {
@@ -22,6 +24,7 @@ type EditForm = {
   amount: string
   subcategory_id: string
   family_member: string
+  account_id: string
   date: string
 }
 
@@ -36,6 +39,7 @@ export default function ExpensesPage() {
   const [expenses, setExpenses] = useState<Expense[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [subcategories, setSubcategories] = useState<Subcategory[]>([])
+  const [accounts, setAccounts] = useState<{ id: number; name: string }[]>([])
   const [loading, setLoading] = useState(true)
   const [editTarget, setEditTarget] = useState<Expense | null>(null)
   const [editForm, setEditForm] = useState<EditForm | null>(null)
@@ -45,7 +49,7 @@ export default function ExpensesPage() {
   async function load() {
     const { data } = await supabase
       .from('expenses')
-      .select('id, expense_name, amount, date, family_member, subcategory_id, subcategories(name, categories(name))')
+      .select('id, expense_name, amount, date, family_member, subcategory_id, account_id, subcategories(name, categories(name)), accounts(name)')
       .order('date', { ascending: false })
       .order('id', { ascending: false })
     setExpenses((data as unknown as Expense[]) ?? [])
@@ -56,6 +60,7 @@ export default function ExpensesPage() {
     load()
     supabase.from('categories').select('id, name').order('name').then(({ data }) => setCategories(data ?? []))
     supabase.from('subcategories').select('id, name, category_id').order('name').then(({ data }) => setSubcategories(data ?? []))
+    supabase.from('accounts').select('id, name').order('name').then(({ data }) => setAccounts(data ?? []))
   }, [])
 
   function openEdit(e: Expense) {
@@ -65,6 +70,7 @@ export default function ExpensesPage() {
       amount: String(e.amount),
       subcategory_id: String(e.subcategory_id),
       family_member: e.family_member ?? '',
+      account_id: e.account_id ? String(e.account_id) : '',
       date: e.date,
     })
   }
@@ -85,6 +91,7 @@ export default function ExpensesPage() {
       amount: Number(editForm.amount),
       subcategory_id: Number(editForm.subcategory_id),
       family_member: editForm.family_member || null,
+      account_id: editForm.account_id ? Number(editForm.account_id) : null,
       date: editForm.date,
       updated_at: new Date().toISOString(),
     }).eq('id', editTarget.id)
@@ -263,6 +270,18 @@ export default function ExpensesPage() {
                 {subcategories
                   .filter((s) => s.category_id === editCategoryId)
                   .map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Account</label>
+              <select
+                value={editForm.account_id}
+                onChange={(e) => setEditForm({ ...editForm, account_id: e.target.value })}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">—</option>
+                {accounts.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
               </select>
             </div>
 

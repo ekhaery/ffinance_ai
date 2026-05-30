@@ -5,28 +5,28 @@ import { supabase } from '@/lib/supabase'
 import { FAMILY_MEMBERS } from '@/lib/constants'
 
 type Subcategory = { id: number; name: string }
+type Account = { id: number; name: string }
 
 export default function CreateExpensePage() {
   const [subcategories, setSubcategories] = useState<Subcategory[]>([])
+  const [accounts, setAccounts] = useState<Account[]>([])
   const [form, setForm] = useState({
     expense_name: '',
     amount: '',
     subcategory_id: '',
     family_member: '',
+    account_id: '',
   })
-  const [subQuery, setSubQuery] = useState('')       // text shown in the combobox input
-  const [subOpen, setSubOpen] = useState(false)      // dropdown open state
+  const [subQuery, setSubQuery] = useState('')
+  const [subOpen, setSubOpen] = useState(false)
   const subRef = useRef<HTMLDivElement>(null)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [success, setSuccess] = useState(false)
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
-    supabase
-      .from('subcategories')
-      .select('id, name')
-      .order('name')
-      .then(({ data }) => setSubcategories(data ?? []))
+    supabase.from('subcategories').select('id, name').order('name').then(({ data }) => setSubcategories(data ?? []))
+    supabase.from('accounts').select('id, name').order('name').then(({ data }) => setAccounts(data ?? []))
   }, [])
 
   // Close dropdown when clicking outside
@@ -69,11 +69,12 @@ export default function CreateExpensePage() {
       amount: Number(form.amount),
       subcategory_id: Number(form.subcategory_id),
       family_member: form.family_member || null,
+      account_id: form.account_id ? Number(form.account_id) : null,
     })
     setSubmitting(false)
     if (error) { setErrors({ submit: error.message }); return }
     setSuccess(true)
-    setForm({ expense_name: '', amount: '', subcategory_id: '', family_member: '' })
+    setForm({ expense_name: '', amount: '', subcategory_id: '', family_member: '', account_id: '' })
     setSubQuery('')
     setTimeout(() => setSuccess(false), 4000)
   }
@@ -137,7 +138,7 @@ export default function CreateExpensePage() {
                 value={subQuery}
                 onChange={(e) => {
                   setSubQuery(e.target.value)
-                  setForm({ ...form, subcategory_id: '' }) // clear selection when typing
+                  setForm({ ...form, subcategory_id: '' })
                   setSubOpen(true)
                 }}
                 onFocus={() => setSubOpen(true)}
@@ -145,7 +146,6 @@ export default function CreateExpensePage() {
                 autoComplete="off"
                 className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 ${errors.subcategory_id ? 'border-red-400' : 'border-gray-300'}`}
               />
-              {/* chevron icon */}
               <button
                 type="button"
                 tabIndex={-1}
@@ -175,6 +175,20 @@ export default function CreateExpensePage() {
               )}
             </div>
             {errors.subcategory_id && <p className="mt-1 text-xs text-red-500">{errors.subcategory_id}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Account</label>
+            <select
+              value={form.account_id}
+              onChange={(e) => setForm({ ...form, account_id: e.target.value })}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+            >
+              <option value="">—</option>
+              {accounts.map((a) => (
+                <option key={a.id} value={a.id}>{a.name}</option>
+              ))}
+            </select>
           </div>
 
           <div>
