@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 
-type Account = { id: number; name: string }
+type Account = { id: number; name: string; description: string | null }
 
 type Income = {
   id: number
@@ -56,7 +56,7 @@ export default function IncomePage() {
 
   useEffect(() => {
     load()
-    supabase.from('accounts').select('id, name').order('name').then(({ data }) => setAccounts(data ?? []))
+    supabase.from('accounts').select('id, name, description').order('name').then(({ data }) => setAccounts(data ?? []))
   }, [])
 
   // Create
@@ -150,6 +150,30 @@ export default function IncomePage() {
             + Add Income
           </button>
         </div>
+
+        {/* Account summary cards */}
+        {accounts.length > 0 && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
+            {accounts.map((a) => {
+              const balance = incomes
+                .filter((i) => i.account_id === a.id)
+                .reduce((s, i) => s + Number(i.amount), 0)
+              return (
+                <div key={a.id} className="bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3 flex flex-col justify-between min-h-[96px]">
+                  <div>
+                    <p className="text-sm font-semibold text-gray-800 truncate">{a.name}</p>
+                    {a.description && (
+                      <p className="text-xs text-gray-400 mt-0.5 truncate">{a.description}</p>
+                    )}
+                  </div>
+                  <p className="text-base font-bold text-green-700 mt-2">
+                    {balance.toLocaleString('id-ID')}
+                  </p>
+                </div>
+              )
+            })}
+          </div>
+        )}
 
         {/* List */}
         {loading ? (

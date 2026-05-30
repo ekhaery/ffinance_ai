@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-
-const FAMILY_MEMBERS = ['Husband', 'Wife', 'Kid']
+import { FAMILY_MEMBERS } from '@/lib/constants'
 
 type Subcategory = { id: number; name: string; category_id: number }
 type Category = { id: number; name: string }
