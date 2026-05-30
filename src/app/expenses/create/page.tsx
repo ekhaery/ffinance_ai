@@ -178,31 +178,43 @@ export default function CreateExpensePage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Account</label>
-            <select
-              value={form.account_id}
-              onChange={(e) => setForm({ ...form, account_id: e.target.value })}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-            >
-              <option value="">—</option>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Account</label>
+            <div className="flex flex-wrap gap-2">
               {accounts.map((a) => (
-                <option key={a.id} value={a.id}>{a.name}</option>
+                <button
+                  key={a.id}
+                  type="button"
+                  onClick={() => setForm({ ...form, account_id: form.account_id === String(a.id) ? '' : String(a.id) })}
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+                    form.account_id === String(a.id)
+                      ? 'bg-blue-600 border-blue-600 text-white'
+                      : 'bg-white border-gray-300 text-gray-700 hover:border-blue-400 hover:text-blue-600'
+                  }`}
+                >
+                  {a.name}
+                </button>
               ))}
-            </select>
+            </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Family Member</label>
-            <select
-              value={form.family_member}
-              onChange={(e) => setForm({ ...form, family_member: e.target.value })}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-            >
-              <option value="">—</option>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Family Member</label>
+            <div className="flex flex-wrap gap-2">
               {FAMILY_MEMBERS.map((m) => (
-                <option key={m} value={m}>{m}</option>
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => setForm({ ...form, family_member: form.family_member === m ? '' : m })}
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+                    form.family_member === m
+                      ? 'bg-blue-600 border-blue-600 text-white'
+                      : 'bg-white border-gray-300 text-gray-700 hover:border-blue-400 hover:text-blue-600'
+                  }`}
+                >
+                  {m}
+                </button>
               ))}
-            </select>
+            </div>
           </div>
 
           <button
