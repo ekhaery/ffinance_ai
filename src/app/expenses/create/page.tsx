@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { FAMILY_MEMBERS } from '@/lib/constants'
 
-type Subcategory = { id: number; name: string }
+type Subcategory = { id: number; name: string; categories: { name: string } | null }
 type Account = { id: number; name: string }
 
 export default function CreateExpensePage() {
@@ -33,7 +33,7 @@ export default function CreateExpensePage() {
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
-    supabase.from('subcategories').select('id, name').order('name').then(({ data }) => setSubcategories(data ?? []))
+    supabase.from('subcategories').select('id, name, categories(name)').order('name').then(({ data }) => setSubcategories((data as unknown as Subcategory[]) ?? []))
     supabase.from('accounts').select('id, name').order('name').then(({ data }) => setAccounts(data ?? []))
   }, [])
 
@@ -264,6 +264,10 @@ export default function CreateExpensePage() {
               )}
             </div>
             {errors.subcategory_id && <p className="mt-1 text-xs text-red-500">{errors.subcategory_id}</p>}
+            {form.subcategory_id && (() => {
+              const cat = subcategories.find((s) => s.id === Number(form.subcategory_id))?.categories?.name
+              return cat ? <p className="mt-1 text-xs text-gray-400">Category: <span className="font-medium text-gray-500">{cat}</span></p> : null
+            })()}
           </div>
 
           {/* Account chips */}
