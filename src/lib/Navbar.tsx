@@ -44,6 +44,7 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-1 flex-1">
           <Link href="/expenses/create" className={linkClass('/expenses/create')}>Create Expense</Link>
           <Link href="/expenses" className={linkClass('/expenses')}>Expenses</Link>
+          <Link href="/income" className={linkClass('/income')}>Income</Link>
           <Link href="/monthly-check" className={linkClass('/monthly-check')}>Monthly Check</Link>
 
           {/* Setting dropdown */}
@@ -68,6 +69,9 @@ export default function Navbar() {
                 </Link>
                 <Link href="/settings/subcategories" onClick={() => setSettingOpen(false)} className={`block px-4 py-2 text-sm ${pathname.startsWith('/settings/subcategories') ? 'text-blue-700 bg-blue-50' : 'text-gray-700 hover:bg-gray-50'}`}>
                   Subcategory
+                </Link>
+                <Link href="/settings/accounts" onClick={() => setSettingOpen(false)} className={`block px-4 py-2 text-sm ${pathname.startsWith('/settings/accounts') ? 'text-blue-700 bg-blue-50' : 'text-gray-700 hover:bg-gray-50'}`}>
+                  Account
                 </Link>
               </div>
             )}
@@ -101,6 +105,9 @@ export default function Navbar() {
           <Link href="/expenses" className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/expenses') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
             Expenses
           </Link>
+          <Link href="/income" className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/income') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
+            Income
+          </Link>
           <Link href="/monthly-check" className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/monthly-check') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
             Monthly Check
           </Link>
@@ -114,6 +121,9 @@ export default function Navbar() {
             </Link>
             <Link href="/settings/subcategories" className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${pathname.startsWith('/settings/subcategories') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
               Subcategory
+            </Link>
+            <Link href="/settings/accounts" className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${pathname.startsWith('/settings/accounts') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
+              Account
             </Link>
           </div>
         </div>
