@@ -139,12 +139,7 @@ export default function MonthlyCheckPage() {
             <p className="text-xs font-medium uppercase tracking-widest text-blue-600 mb-1">Monthly Check</p>
             <h1 className="text-xl md:text-2xl font-semibold text-gray-900">{template.template_name}</h1>
           </div>
-          <Link
-            href={`/templates/${template.id}/edit`}
-            className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-          >
-            Edit
-          </Link>
+          {/* Edit button hidden for now */}
         </div>
 
         {/* Month picker */}
