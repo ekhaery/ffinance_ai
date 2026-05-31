@@ -177,10 +177,10 @@ export default function AccountDetailPage() {
 
         {/* Time range filter */}
         {/* Time Range + Category — single card */}
-        <div className="bg-[#FFE2AF] rounded-2xl border border-[#FFE2AF] shadow-sm overflow-hidden">
+        <div className="bg-[#F4B342] rounded-2xl border border-[#F4B342] shadow-sm overflow-hidden">
           {/* Time Range */}
           <div className="px-5 py-4 space-y-3">
-            <p className="text-sm font-bold text-[#3F9AAE]">Time Range</p>
+            <p className="text-sm font-bold text-[#121358]">Time Range</p>
             <div className="flex flex-wrap gap-2">
               {rangeOptions.map((o) => (
                 <button
@@ -188,8 +188,8 @@ export default function AccountDetailPage() {
                   onClick={() => setRangeKey(o.key)}
                   className={`px-2.5 py-1 rounded-full text-xs font-medium border transition-colors ${
                     rangeKey === o.key
-                      ? 'bg-[#3F9AAE] border-[#3F9AAE] text-white'
-                      : 'bg-white border-gray-300 text-gray-700 hover:border-[#3F9AAE] hover:text-[#3F9AAE]'
+                      ? 'bg-[#121358] border-[#121358] text-white'
+                      : 'bg-white border-gray-300 text-gray-700 hover:border-[#121358] hover:text-[#121358]'
                   }`}
                 >
                   {o.label}
@@ -199,14 +199,14 @@ export default function AccountDetailPage() {
             {rangeKey === 'custom' && (
               <div className="grid grid-cols-2 gap-3 pt-1 bg-[#FFFDE1] rounded-2xl p-3">
                 <div>
-                  <label className="block text-xs font-semibold text-[#3F9AAE] mb-1">Start Date</label>
+                  <label className="block text-xs font-semibold text-[#121358] mb-1">Start Date</label>
                   <input type="date" value={customStart} onChange={(e) => setCustomStart(e.target.value)}
-                    className="w-full rounded-full border border-[#3F9AAE] px-4 py-1.5 text-sm bg-white outline-none focus:ring-2 focus:ring-[#3F9AAE]" />
+                    className="w-full rounded-full border border-[#121358] px-4 py-1.5 text-sm bg-white outline-none focus:ring-2 focus:ring-[#121358]" />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-[#3F9AAE] mb-1">End Date</label>
+                  <label className="block text-xs font-semibold text-[#121358] mb-1">End Date</label>
                   <input type="date" value={customEnd} onChange={(e) => setCustomEnd(e.target.value)}
-                    className="w-full rounded-full border border-[#3F9AAE] px-4 py-1.5 text-sm bg-white outline-none focus:ring-2 focus:ring-[#3F9AAE]" />
+                    className="w-full rounded-full border border-[#121358] px-4 py-1.5 text-sm bg-white outline-none focus:ring-2 focus:ring-[#121358]" />
                 </div>
               </div>
             )}
@@ -219,11 +219,11 @@ export default function AccountDetailPage() {
           {categories.length > 0 && (
             <div className="px-5 py-4">
               <div className="flex items-center gap-3">
-              <p className="text-sm font-bold text-[#3F9AAE] shrink-0">Category</p>
+              <p className="text-sm font-bold text-[#121358] shrink-0">Category</p>
               <select
                 value={selectedCategory ?? ''}
                 onChange={(e) => setSelectedCategory(e.target.value || null)}
-                className="w-full rounded-full border border-[#3F9AAE] px-4 py-1.5 text-sm text-gray-700 bg-white outline-none focus:ring-2 focus:ring-[#3F9AAE]"
+                className="w-full rounded-full border border-[#121358] px-4 py-1.5 text-sm text-gray-700 bg-white outline-none focus:ring-2 focus:ring-[#121358]"
               >
                 <option value="">All</option>
                 {categories.map((cat) => (
@@ -240,7 +240,7 @@ export default function AccountDetailPage() {
           <div className="grid grid-cols-5 gap-3">
 
             {/* Left card: Balance / Used / Income */}
-            <div className="col-span-2 bg-[#3F9AAE] rounded-2xl shadow-sm px-4 py-4 space-y-3">
+            <div className="col-span-2 bg-[#121358] rounded-2xl shadow-sm px-4 py-4 space-y-3">
               <div>
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-white/70 uppercase tracking-wide font-medium">Balance</p>
@@ -254,7 +254,7 @@ export default function AccountDetailPage() {
               </div>
               <div>
                 <p className="text-xs text-white/70 uppercase tracking-wide font-medium">Used</p>
-                <p className="text-base font-bold text-[#FFE2AF] mt-0.5">{hideAmounts ? '****' : fmt(used)}</p>
+                <p className="text-base font-bold text-[#F4B342] mt-0.5">{hideAmounts ? '****' : fmt(used)}</p>
               </div>
               <div>
                 <p className="text-xs text-white/70 uppercase tracking-wide font-medium">Income</p>
@@ -263,19 +263,19 @@ export default function AccountDetailPage() {
             </div>
 
             {/* Right card: Category % */}
-            <div className="col-span-3 bg-[#FFE2AF] rounded-2xl shadow-sm px-4 py-4 space-y-2">
+            <div className="col-span-3 bg-[#F4B342] rounded-2xl shadow-sm px-4 py-4 space-y-2">
               {categories.map((cat) => {
                 const pct = income > 0 ? Math.round(((catTotals[cat.name] ?? 0) / income) * 100) : 0
                 return (
                   <div key={cat.id} className="flex items-center justify-between">
-                    <span className="text-xs text-gray-600 truncate mr-1">{cat.name}</span>
-                    <span className="text-xs font-bold text-[#3F9AAE] shrink-0">{pct}%</span>
+                    <span className="text-xs text-[#121358] truncate mr-1">{cat.name}</span>
+                    <span className="text-xs font-bold text-[#121358] shrink-0">{pct}%</span>
                   </div>
                 )
               })}
               <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-600 truncate mr-1">Other</span>
-                <span className="text-xs font-bold text-[#3F9AAE] shrink-0">
+                <span className="text-xs text-[#121358] truncate mr-1">Other</span>
+                <span className="text-xs font-bold text-[#121358] shrink-0">
                   {income > 0 ? Math.round((transferOut / income) * 100) : 0}%
                 </span>
               </div>
@@ -319,7 +319,7 @@ export default function AccountDetailPage() {
                         <td className="px-5 py-3 text-gray-500 whitespace-nowrap">{formatDate(r.date)}</td>
                         <td className="px-5 py-3 text-gray-700 whitespace-nowrap">{getTypeLabel(r.type)}</td>
                         <td className="px-5 py-3 text-gray-800 max-w-[180px] truncate">{getLabel(r)}</td>
-                        <td className={`px-5 py-3 text-right font-semibold whitespace-nowrap ${isNeg ? 'text-[#FA6781]' : 'text-[#3F9AAE]'}`}>
+                        <td className={`px-5 py-3 text-right font-semibold whitespace-nowrap ${isNeg ? 'text-[#FA6781]' : 'text-[#121358]'}`}>
                           {isNeg ? '−' : '+'}{fmt(Number(r.amount))}
                         </td>
                         <td className={`px-5 py-3 text-right whitespace-nowrap ${r.balanceAfter < 0 ? 'text-[#FA6781]' : 'text-gray-700'}`}>
@@ -340,7 +340,7 @@ export default function AccountDetailPage() {
                   <div key={r.id} className="px-5 py-3 space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-400">{formatDate(r.date)}</span>
-                      <span className={`text-sm font-semibold ${isNeg ? 'text-[#FA6781]' : 'text-[#3F9AAE]'}`}>
+                      <span className={`text-sm font-semibold ${isNeg ? 'text-[#FA6781]' : 'text-[#121358]'}`}>
                         {isNeg ? '−' : '+'}{fmt(Number(r.amount))}
                       </span>
                     </div>

@@ -60,7 +60,7 @@ export default function CategoriesPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#FFF5E5] px-4 py-12">
+    <main className="min-h-screen bg-[#ffffff] px-4 py-12">
       <div className="max-w-xl mx-auto space-y-6">
         <h1 className="text-2xl font-semibold text-gray-900">Categories</h1>
 
@@ -74,14 +74,14 @@ export default function CategoriesPage() {
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
                 placeholder="Category name"
-                className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#3F9AAE] ${error ? 'border-[#FA6781]' : 'border-gray-300'}`}
+                className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#121358] ${error ? 'border-[#FA6781]' : 'border-gray-300'}`}
               />
               {error && <p className="mt-1 text-xs text-[#FA6781]">{error}</p>}
             </div>
             <button
               type="submit"
               disabled={saving}
-              className="rounded-lg bg-[#3F9AAE] px-4 py-2 text-sm font-medium text-white hover:bg-[#4a9d81] disabled:opacity-50 transition-colors"
+              className="rounded-lg bg-[#121358] px-4 py-2 text-sm font-medium text-white hover:bg-[#4a9d81] disabled:opacity-50 transition-colors"
             >
               Add
             </button>
@@ -94,7 +94,7 @@ export default function CategoriesPage() {
             <p className="px-6 py-8 text-sm text-center text-gray-400">No categories yet.</p>
           ) : (
             <table className="w-full text-sm">
-              <thead className="border-b border-gray-100 bg-[#FFF5E5]/50 text-xs uppercase text-gray-500">
+              <thead className="border-b border-gray-100 bg-[#ffffff]/50 text-xs uppercase text-gray-500">
                 <tr>
                   <th className="px-5 py-3 text-left w-10">#</th>
                   <th className="px-5 py-3 text-left">Name</th>
@@ -114,7 +114,7 @@ export default function CategoriesPage() {
                             onChange={(e) => setEditName(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleUpdate(cat.id)}
                             autoFocus
-                            className={`rounded-lg border px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-[#3F9AAE] ${editError ? 'border-[#FA6781]' : 'border-gray-300'}`}
+                            className={`rounded-lg border px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-[#121358] ${editError ? 'border-[#FA6781]' : 'border-gray-300'}`}
                           />
                           {editError && <p className="mt-0.5 text-xs text-[#FA6781]">{editError}</p>}
                         </div>
@@ -125,7 +125,7 @@ export default function CategoriesPage() {
                     <td className="px-5 py-3 text-right space-x-3">
                       {editId === cat.id ? (
                         <>
-                          <button onClick={() => handleUpdate(cat.id)} disabled={saving} className="text-[#3F9AAE] hover:underline disabled:opacity-40">Save</button>
+                          <button onClick={() => handleUpdate(cat.id)} disabled={saving} className="text-[#121358] hover:underline disabled:opacity-40">Save</button>
                           <button onClick={() => setEditId(null)} className="text-gray-400 hover:underline">Cancel</button>
                         </>
                       ) : (

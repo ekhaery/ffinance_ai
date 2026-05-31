@@ -29,13 +29,13 @@ export default function Navbar() {
 
   const linkClass = (path: string) =>
     `px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-      isActive(path) ? 'bg-white/20 text-[#FFF5E5]' : 'text-[#FFF5E5]/90 hover:bg-white/10 hover:text-[#FFF5E5]'
+      isActive(path) ? 'bg-white/20 text-[#ffffff]' : 'text-[#ffffff]/90 hover:bg-white/10 hover:text-[#ffffff]'
     }`
 
   return (
-    <nav className="bg-[#F96E5B] border-b border-[#F96E5B]">
+    <nav className="bg-[#121358] border-b border-[#121358]">
       <div className="max-w-4xl mx-auto px-4 flex items-center h-14 gap-1">
-        <Link href="/outflow" className="font-bold text-[#FFF5E5] mr-4 text-lg tracking-tight hover:opacity-75 transition-opacity">FinFadel</Link>
+        <Link href="/outflow" className="font-bold text-[#ffffff] mr-4 text-lg tracking-tight hover:opacity-75 transition-opacity">FinFadel</Link>
 
         {/* Links — always visible */}
         <div className="flex items-center gap-1 flex-1">
@@ -47,18 +47,18 @@ export default function Navbar() {
               onClick={() => setSettingOpen((o) => !o)}
               className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                 pathname.startsWith('/settings') || pathname.startsWith('/templates')
-                  ? 'bg-white/20 text-[#FFF5E5]'
-                  : 'text-[#FFF5E5]/90 hover:bg-white/10 hover:text-[#FFF5E5]'
+                  ? 'bg-white/20 text-[#ffffff]'
+                  : 'text-[#ffffff]/90 hover:bg-white/10 hover:text-[#ffffff]'
               }`}
             >
               <i className="fa-solid fa-gear" /> {chevron(settingOpen)}
             </button>
             {settingOpen && (
               <div className="absolute left-0 top-full mt-1 w-44 bg-white rounded-lg border border-gray-200 shadow-lg py-1 z-50">
-                <Link href="/templates" onClick={() => setSettingOpen(false)} className={`block px-4 py-2 text-sm ${pathname.startsWith('/templates') ? 'text-[#3F9AAE] bg-[#3F9AAE]/10' : 'text-gray-700 hover:bg-gray-50'}`}>Templates</Link>
-                <Link href="/settings/categories" onClick={() => setSettingOpen(false)} className={`block px-4 py-2 text-sm ${pathname.startsWith('/settings/categories') ? 'text-[#3F9AAE] bg-[#3F9AAE]/10' : 'text-gray-700 hover:bg-gray-50'}`}>Category</Link>
-                <Link href="/settings/subcategories" onClick={() => setSettingOpen(false)} className={`block px-4 py-2 text-sm ${pathname.startsWith('/settings/subcategories') ? 'text-[#3F9AAE] bg-[#3F9AAE]/10' : 'text-gray-700 hover:bg-gray-50'}`}>Subcategory</Link>
-                <Link href="/settings/accounts" onClick={() => setSettingOpen(false)} className={`block px-4 py-2 text-sm ${pathname.startsWith('/settings/accounts') ? 'text-[#3F9AAE] bg-[#3F9AAE]/10' : 'text-gray-700 hover:bg-gray-50'}`}>Account</Link>
+                <Link href="/templates" onClick={() => setSettingOpen(false)} className={`block px-4 py-2 text-sm ${pathname.startsWith('/templates') ? 'text-[#121358] bg-[#121358]/10' : 'text-gray-700 hover:bg-gray-50'}`}>Templates</Link>
+                <Link href="/settings/categories" onClick={() => setSettingOpen(false)} className={`block px-4 py-2 text-sm ${pathname.startsWith('/settings/categories') ? 'text-[#121358] bg-[#121358]/10' : 'text-gray-700 hover:bg-gray-50'}`}>Category</Link>
+                <Link href="/settings/subcategories" onClick={() => setSettingOpen(false)} className={`block px-4 py-2 text-sm ${pathname.startsWith('/settings/subcategories') ? 'text-[#121358] bg-[#121358]/10' : 'text-gray-700 hover:bg-gray-50'}`}>Subcategory</Link>
+                <Link href="/settings/accounts" onClick={() => setSettingOpen(false)} className={`block px-4 py-2 text-sm ${pathname.startsWith('/settings/accounts') ? 'text-[#121358] bg-[#121358]/10' : 'text-gray-700 hover:bg-gray-50'}`}>Account</Link>
               </div>
             )}
           </div>

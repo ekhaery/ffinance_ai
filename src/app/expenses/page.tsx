@@ -155,7 +155,7 @@ export default function ExpensesPage() {
   const sortedDates = Object.keys(grouped).sort((a, b) => b.localeCompare(a))
 
   return (
-    <main className="min-h-screen bg-[#FFF5E5] px-4 py-8">
+    <main className="min-h-screen bg-[#ffffff] px-4 py-8">
       <div className="max-w-3xl mx-auto">
 
         {/* Header */}
@@ -185,7 +185,7 @@ export default function ExpensesPage() {
               return (
                 <div key={date} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                   {/* Card header */}
-                  <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-[#FFF5E5]/50">
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-[#ffffff]/50">
                     <span className="text-sm font-semibold text-gray-700 capitalize">
                       {formatCardDate(date)}
                     </span>
@@ -206,7 +206,7 @@ export default function ExpensesPage() {
                           <div className="flex items-center gap-2">
                             <p className="text-sm font-medium text-gray-900 truncate">{e.expense_name}</p>
                             {e.family_member && (
-                              <span className="shrink-0 inline-flex items-center rounded-full bg-[#3F9AAE]/10 px-2 py-0.5 text-xs font-medium text-[#3F9AAE]">
+                              <span className="shrink-0 inline-flex items-center rounded-full bg-[#121358]/10 px-2 py-0.5 text-xs font-medium text-[#121358]">
                                 {e.family_member}
                               </span>
                             )}
@@ -273,7 +273,7 @@ export default function ExpensesPage() {
                 type="text"
                 value={editForm.expense_name}
                 onChange={(e) => setEditForm({ ...editForm, expense_name: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#3F9AAE]"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#121358]"
               />
             </div>
 
@@ -283,7 +283,7 @@ export default function ExpensesPage() {
                 type="number"
                 value={editForm.amount}
                 onChange={(e) => setEditForm({ ...editForm, amount: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#3F9AAE]"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#121358]"
               />
             </div>
 
@@ -295,7 +295,7 @@ export default function ExpensesPage() {
                   const firstSub = subcategories.find((s) => s.category_id === Number(e.target.value))
                   setEditForm({ ...editForm, subcategory_id: firstSub ? String(firstSub.id) : '' })
                 }}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-[#3F9AAE]"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-[#121358]"
               >
                 <option value="">Select category</option>
                 {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -307,7 +307,7 @@ export default function ExpensesPage() {
               <select
                 value={editForm.subcategory_id}
                 onChange={(e) => setEditForm({ ...editForm, subcategory_id: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-[#3F9AAE]"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-[#121358]"
               >
                 <option value="">Select subcategory</option>
                 {subcategories
@@ -321,7 +321,7 @@ export default function ExpensesPage() {
               <select
                 value={editForm.account_id}
                 onChange={(e) => setEditForm({ ...editForm, account_id: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-[#3F9AAE]"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-[#121358]"
               >
                 <option value="">—</option>
                 {accounts.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
@@ -334,7 +334,7 @@ export default function ExpensesPage() {
                 <select
                   value={editForm.family_member}
                   onChange={(e) => setEditForm({ ...editForm, family_member: e.target.value })}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-[#3F9AAE]"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-[#121358]"
                 >
                   <option value="">—</option>
                   {FAMILY_MEMBERS.map((m) => <option key={m} value={m}>{m}</option>)}
@@ -346,7 +346,7 @@ export default function ExpensesPage() {
                   type="date"
                   value={editForm.date}
                   onChange={(e) => setEditForm({ ...editForm, date: e.target.value })}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#3F9AAE]"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#121358]"
                 />
               </div>
             </div>
@@ -355,7 +355,7 @@ export default function ExpensesPage() {
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="flex-1 rounded-lg bg-[#3F9AAE] py-2.5 text-sm font-medium text-white hover:bg-[#4a9d81] disabled:opacity-50 transition-colors"
+                className="flex-1 rounded-lg bg-[#121358] py-2.5 text-sm font-medium text-white hover:bg-[#4a9d81] disabled:opacity-50 transition-colors"
               >
                 {saving ? 'Saving…' : 'Save'}
               </button>

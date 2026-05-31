@@ -91,19 +91,19 @@ export default function BalancePage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#FFF5E5] px-4 py-8">
+      <main className="min-h-screen bg-[#ffffff] px-4 py-8">
         <p className="text-sm text-gray-400 text-center mt-16">Loading…</p>
       </main>
     )
   }
 
   return (
-    <main className="min-h-screen bg-[#FFF5E5] px-4 py-8">
+    <main className="min-h-screen bg-[#ffffff] px-4 py-8">
       <div className="max-w-xl mx-auto">
         <div className="mb-6">
           <h1 className="text-xl font-semibold text-gray-900">Balance</h1>
-          <Link href="/expenses" className="inline-flex items-center gap-1.5 mr-2 mt-1.5 px-3 py-1 rounded-full border border-[#3F9AAE] bg-[#3F9AAE] text-white text-xs font-semibold hover:bg-[#79C9C5] hover:border-[#79C9C5] transition-colors">All History</Link>
-          <Link href="/monthly-check" className="inline-flex items-center gap-1.5 mt-1.5 px-3 py-1 rounded-full border border-[#3F9AAE] bg-[#3F9AAE] text-white text-xs font-semibold hover:bg-[#79C9C5] hover:border-[#79C9C5] transition-colors">Monthly Checklist</Link>
+          <Link href="/expenses" className="inline-flex items-center gap-1.5 mr-2 mt-1.5 px-3 py-1 rounded-full border border-[#121358] bg-[#121358] text-white text-xs font-semibold hover:bg-[#79C9C5] hover:border-[#79C9C5] transition-colors">All History</Link>
+          <Link href="/monthly-check" className="inline-flex items-center gap-1.5 mt-1.5 px-3 py-1 rounded-full border border-[#121358] bg-[#121358] text-white text-xs font-semibold hover:bg-[#79C9C5] hover:border-[#79C9C5] transition-colors">Monthly Checklist</Link>
         </div>
 
         {accounts.length === 0 ? (
@@ -129,7 +129,7 @@ export default function BalancePage() {
                   {a.description && (
                     <p className="text-sm text-gray-400 mt-0.5">{a.description}</p>
                   )}
-                  <p className={`text-2xl font-bold mt-3 ${bal < 0 ? 'text-[#FA6781]' : 'text-[#3F9AAE]'}`}>
+                  <p className={`text-2xl font-bold mt-3 ${bal < 0 ? 'text-[#FA6781]' : 'text-[#121358]'}`}>
                     {bal < 0 ? '-' : ''}{Math.abs(bal).toLocaleString('id-ID')}
                   </p>
 

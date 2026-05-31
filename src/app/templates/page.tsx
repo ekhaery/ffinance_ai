@@ -33,13 +33,13 @@ export default function TemplateListPage() {
     t.template_details.reduce((sum, d) => sum + Number(d.amount), 0)
 
   return (
-    <main className="min-h-screen bg-[#FFF5E5] px-4 py-8 md:py-12">
+    <main className="min-h-screen bg-[#ffffff] px-4 py-8 md:py-12">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-xl md:text-2xl font-semibold text-gray-900">Templates</h1>
           <Link
             href="/templates/create"
-            className="rounded-lg bg-[#3F9AAE] px-3 py-2 md:px-4 text-sm font-medium text-white hover:bg-[#4a9d81] transition-colors"
+            className="rounded-lg bg-[#121358] px-3 py-2 md:px-4 text-sm font-medium text-white hover:bg-[#4a9d81] transition-colors"
           >
             + New
           </Link>
@@ -50,7 +50,7 @@ export default function TemplateListPage() {
         ) : templates.length === 0 ? (
           <div className="rounded-xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center">
             <p className="text-gray-500 text-sm">No templates yet.</p>
-            <Link href="/templates/create" className="mt-3 inline-block text-sm text-[#3F9AAE] hover:underline">
+            <Link href="/templates/create" className="mt-3 inline-block text-sm text-[#121358] hover:underline">
               Create your first template
             </Link>
           </div>
@@ -59,7 +59,7 @@ export default function TemplateListPage() {
             {/* Desktop table */}
             <div className="hidden md:block bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
               <table className="w-full text-sm">
-                <thead className="border-b border-gray-100 bg-[#FFF5E5]/50 text-xs uppercase text-gray-500">
+                <thead className="border-b border-gray-100 bg-[#ffffff]/50 text-xs uppercase text-gray-500">
                   <tr>
                     <th className="px-5 py-3 text-left">Template Name</th>
                     <th className="px-5 py-3 text-right">Total Budget</th>
@@ -73,7 +73,7 @@ export default function TemplateListPage() {
                       <td className="px-5 py-4 font-medium text-gray-900">
                         <span>{t.template_name}</span>
                         {t.is_used && (
-                          <span className="ml-2 inline-flex items-center rounded-full bg-[#3F9AAE]/10 px-2 py-0.5 text-xs font-medium text-[#3F9AAE] ring-1 ring-inset ring-[#3F9AAE]/20">
+                          <span className="ml-2 inline-flex items-center rounded-full bg-[#121358]/10 px-2 py-0.5 text-xs font-medium text-[#121358] ring-1 ring-inset ring-[#121358]/20">
                             Default
                           </span>
                         )}
@@ -85,7 +85,7 @@ export default function TemplateListPage() {
                         {new Date(t.created_at).toLocaleDateString('id-ID')}
                       </td>
                       <td className="px-5 py-4 text-right space-x-3">
-                        <Link href={`/templates/${t.id}`} className="text-[#3F9AAE] hover:underline">View</Link>
+                        <Link href={`/templates/${t.id}`} className="text-[#121358] hover:underline">View</Link>
                         <Link href={`/templates/${t.id}/edit`} className="text-amber-600 hover:underline"><i className="fa-solid fa-pen"></i></Link>
                         <button
                           onClick={() => handleDelete(t.id)}
@@ -110,7 +110,7 @@ export default function TemplateListPage() {
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-medium text-gray-900 text-sm">{t.template_name}</span>
                         {t.is_used && (
-                          <span className="inline-flex items-center rounded-full bg-[#3F9AAE]/10 px-2 py-0.5 text-xs font-medium text-[#3F9AAE] ring-1 ring-inset ring-[#3F9AAE]/20">
+                          <span className="inline-flex items-center rounded-full bg-[#121358]/10 px-2 py-0.5 text-xs font-medium text-[#121358] ring-1 ring-inset ring-[#121358]/20">
                             Default
                           </span>
                         )}
@@ -124,7 +124,7 @@ export default function TemplateListPage() {
                     </span>
                   </div>
                   <div className="flex gap-3 mt-2 justify-end">
-                    <Link href={`/templates/${t.id}`} className="text-sm font-medium text-[#3F9AAE]">View</Link>
+                    <Link href={`/templates/${t.id}`} className="text-sm font-medium text-[#121358]">View</Link>
                     <Link href={`/templates/${t.id}/edit`} className="text-sm font-medium text-amber-600"><i className="fa-solid fa-pen"></i></Link>
                     <button onClick={() => handleDelete(t.id)} disabled={deleting === t.id} className="text-sm font-medium text-[#FA6781] disabled:opacity-40">
                       <i className={`fa-solid fa-trash ${deleting === t.id ? 'opacity-40' : ''}`}></i>

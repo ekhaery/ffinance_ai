@@ -161,12 +161,12 @@ export default function CreateExpensePage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#FFF5E5] flex items-start justify-center pt-16 px-4">
+    <main className="min-h-screen bg-[#ffffff] flex items-start justify-center pt-16 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
         <h1 className="text-2xl font-semibold text-gray-900 mb-6">Create Expense</h1>
 
         {success && (
-          <div className="mb-5 rounded-lg bg-[#3F9AAE]/10 border border-[#3F9AAE]/30 px-4 py-3 text-sm text-[#3F9AAE]">
+          <div className="mb-5 rounded-lg bg-[#121358]/10 border border-[#121358]/30 px-4 py-3 text-sm text-[#121358]">
             Expense saved successfully!
           </div>
         )}
@@ -192,7 +192,7 @@ export default function CreateExpensePage() {
                 onFocus={() => nameSuggestions.length > 0 && setNameOpen(true)}
                 placeholder="e.g. Monthly Netflix"
                 autoComplete="off"
-                className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#3F9AAE] ${errors.expense_name ? 'border-[#FA6781]' : 'border-gray-300'}`}
+                className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#121358] ${errors.expense_name ? 'border-[#FA6781]' : 'border-gray-300'}`}
               />
               {nameOpen && nameSuggestions.length > 0 && (
                 <ul className="absolute z-30 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-52 overflow-y-auto text-sm">
@@ -200,7 +200,7 @@ export default function CreateExpensePage() {
                     <li
                       key={name}
                       onMouseDown={() => autofill(name)}
-                      className="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-[#3F9AAE]/10 hover:text-[#3F9AAE] text-gray-700"
+                      className="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-[#121358]/10 hover:text-[#121358] text-gray-700"
                     >
                       <span>{name}</span>
                       <span className="text-xs text-gray-400 ml-2">autofill</span>
@@ -223,7 +223,7 @@ export default function CreateExpensePage() {
               value={form.amount}
               onChange={(e) => setForm({ ...form, amount: e.target.value })}
               placeholder="0"
-              className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#3F9AAE] ${errors.amount ? 'border-[#FA6781]' : 'border-gray-300'}`}
+              className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#121358] ${errors.amount ? 'border-[#FA6781]' : 'border-gray-300'}`}
             />
             {errors.amount && <p className="mt-1 text-xs text-[#FA6781]">{errors.amount}</p>}
           </div>
@@ -245,7 +245,7 @@ export default function CreateExpensePage() {
                 onFocus={() => setSubOpen(true)}
                 placeholder="Type or select subcategory…"
                 autoComplete="off"
-                className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#3F9AAE] ${errors.subcategory_id ? 'border-[#FA6781]' : 'border-gray-300'}`}
+                className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#121358] ${errors.subcategory_id ? 'border-[#FA6781]' : 'border-gray-300'}`}
               />
               <button
                 type="button"
@@ -266,7 +266,7 @@ export default function CreateExpensePage() {
                       <li
                         key={s.id}
                         onMouseDown={() => selectSub(s)}
-                        className={`px-3 py-2 cursor-pointer hover:bg-[#3F9AAE]/10 hover:text-[#3F9AAE] ${form.subcategory_id === String(s.id) ? 'bg-[#3F9AAE]/10 text-[#3F9AAE] font-medium' : 'text-gray-700'}`}
+                        className={`px-3 py-2 cursor-pointer hover:bg-[#121358]/10 hover:text-[#121358] ${form.subcategory_id === String(s.id) ? 'bg-[#121358]/10 text-[#121358] font-medium' : 'text-gray-700'}`}
                       >
                         {s.name}
                       </li>
@@ -293,8 +293,8 @@ export default function CreateExpensePage() {
                   onClick={() => setForm((prev) => ({ ...prev, account_id: prev.account_id === String(a.id) ? '' : String(a.id) }))}
                   className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
                     form.account_id === String(a.id)
-                      ? 'bg-[#3F9AAE] border-[#3F9AAE] text-white'
-                      : 'bg-white border-gray-300 text-gray-700 hover:border-[#3F9AAE] hover:text-[#3F9AAE]'
+                      ? 'bg-[#121358] border-[#121358] text-white'
+                      : 'bg-white border-gray-300 text-gray-700 hover:border-[#121358] hover:text-[#121358]'
                   }`}
                 >
                   {a.name}
@@ -314,8 +314,8 @@ export default function CreateExpensePage() {
                   onClick={() => setForm((prev) => ({ ...prev, family_member: prev.family_member === m ? '' : m }))}
                   className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
                     form.family_member === m
-                      ? 'bg-[#3F9AAE] border-[#3F9AAE] text-white'
-                      : 'bg-white border-gray-300 text-gray-700 hover:border-[#3F9AAE] hover:text-[#3F9AAE]'
+                      ? 'bg-[#121358] border-[#121358] text-white'
+                      : 'bg-white border-gray-300 text-gray-700 hover:border-[#121358] hover:text-[#121358]'
                   }`}
                 >
                   {m}
@@ -327,7 +327,7 @@ export default function CreateExpensePage() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full rounded-lg bg-[#3F9AAE] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#4a9d81] disabled:opacity-50 transition-colors"
+            className="w-full rounded-lg bg-[#121358] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#4a9d81] disabled:opacity-50 transition-colors"
           >
             {submitting ? 'Saving…' : 'Submit'}
           </button>
