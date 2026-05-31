@@ -1,4 +1,4 @@
-// Color palette — https://colorhunt.co/palette/3f9aae79c9c5ffe2aff96e5b
+// Color palette — https://colorhunt.co/palette/3601858f0177de1a58f4b342 | https://colorhunt.co/palette/121358232f722f578a36ada3
 export const COLORS = {
   PRIMARY:    '#121358', // teal blue — buttons, active states, chips
   SECONDARY:  '#6668a8', // light teal — hover states

@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 
-type Category = { id: number; name: string }
-type Subcategory = { id: number; name: string; category_id: number; categories: { name: string } }
+type Category = { id: number; name: string; color: string }
+type Subcategory = { id: number; name: string; category_id: number; categories: { name: string; color: string } }
 
 export default function SubcategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([])
@@ -21,8 +21,8 @@ export default function SubcategoriesPage() {
 
   async function load() {
     const [{ data: cats }, { data: subs }] = await Promise.all([
-      supabase.from('categories').select('id, name').order('name'),
-      supabase.from('subcategories').select('id, name, category_id, categories(name)').order('category_id').order('name'),
+      supabase.from('categories').select('id, name, color').order('name'),
+      supabase.from('subcategories').select('id, name, category_id, categories(name, color)').order('category_id').order('name'),
     ])
     setCategories(cats ?? [])
     setSubcategories((subs as unknown as Subcategory[]) ?? [])
@@ -83,7 +83,7 @@ export default function SubcategoriesPage() {
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
           <h2 className="text-sm font-medium text-gray-700 mb-3">Add Subcategory</h2>
           <form onSubmit={handleCreate} className="flex gap-2 items-start">
-            <div className="w-44">
+            <div className="w-28 md:w-44">
               <select
                 value={newCategoryId}
                 onChange={(e) => setNewCategoryId(e.target.value)}
@@ -122,8 +122,6 @@ export default function SubcategoriesPage() {
             <table className="w-full text-sm">
               <thead className="border-b border-gray-100 bg-[#ffffff]/50 text-xs uppercase text-gray-500">
                 <tr>
-                  <th className="px-5 py-3 text-left w-10">#</th>
-                  <th className="px-5 py-3 text-left">Category</th>
                   <th className="px-5 py-3 text-left">Name</th>
                   <th className="px-5 py-3 text-right">Actions</th>
                 </tr>
@@ -131,27 +129,9 @@ export default function SubcategoriesPage() {
               <tbody className="divide-y divide-gray-50">
                 {subcategories.map((sub) => (
                   <tr key={sub.id} className="hover:bg-gray-50">
-                    <td className="px-5 py-3 text-gray-400">{sub.id}</td>
                     <td className="px-5 py-3">
                       {editId === sub.id ? (
-                        <div>
-                          <select
-                            value={editCategoryId}
-                            onChange={(e) => setEditCategoryId(e.target.value)}
-                            className={`rounded-2xl border px-2 py-1 text-sm bg-white outline-none focus:ring-2 focus:ring-[#F4B342] ${editErrors.category ? 'border-[#FA6781]' : 'border-[#F4B342]'}`}
-                          >
-                            <option value="">Select</option>
-                            {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-                          </select>
-                          {editErrors.category && <p className="mt-0.5 text-xs text-[#FA6781]">{editErrors.category}</p>}
-                        </div>
-                      ) : (
-                        <span className="text-gray-600">{sub.categories?.name}</span>
-                      )}
-                    </td>
-                    <td className="px-5 py-3">
-                      {editId === sub.id ? (
-                        <div>
+                        <div className="space-y-1">
                           <input
                             type="text"
                             value={editName}
@@ -160,10 +140,22 @@ export default function SubcategoriesPage() {
                             autoFocus
                             className={`rounded-2xl border px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-[#F4B342] ${editErrors.name ? 'border-[#FA6781]' : 'border-[#F4B342]'}`}
                           />
+                          <select
+                            value={editCategoryId}
+                            onChange={(e) => setEditCategoryId(e.target.value)}
+                            className={`rounded-2xl border px-2 py-1 text-sm bg-white outline-none focus:ring-2 focus:ring-[#F4B342] ${editErrors.category ? 'border-[#FA6781]' : 'border-[#F4B342]'}`}
+                          >
+                            <option value="">Select category</option>
+                            {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                          </select>
                           {editErrors.name && <p className="mt-0.5 text-xs text-[#FA6781]">{editErrors.name}</p>}
+                          {editErrors.category && <p className="mt-0.5 text-xs text-[#FA6781]">{editErrors.category}</p>}
                         </div>
                       ) : (
-                        <span className="font-medium text-gray-900">{sub.name}</span>
+                        <div>
+                          <span className="font-medium text-gray-900">{sub.name}</span>
+                          <p className="text-xs mt-0.5 font-medium" style={{ color: sub.categories?.color ?? '#6668a8' }}>{sub.categories?.name}</p>
+                        </div>
                       )}
                     </td>
                     <td className="px-5 py-3 text-right space-x-3">
