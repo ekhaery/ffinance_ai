@@ -39,6 +39,17 @@ export default function ViewTemplatePage() {
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-12">
       <div className="max-w-3xl mx-auto">
+        {/* Back */}
+        <div className="mb-4">
+          <Link
+            href="/templates"
+            className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
+          >
+            <i className="fa-solid fa-arrow-left text-xs" />
+            Back
+          </Link>
+        </div>
+
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-semibold text-gray-900">{data.template_name}</h1>
@@ -52,12 +63,6 @@ export default function ViewTemplatePage() {
               className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-medium text-amber-700 hover:bg-amber-100 transition-colors"
             >
               Edit
-            </Link>
-            <Link
-              href="/templates"
-              className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              Back
             </Link>
           </div>
         </div>

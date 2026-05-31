@@ -1,13 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { TemplateDetail } from '@/lib/types'
 import TemplateForm from '@/lib/TemplateForm'
 
 export default function EditTemplatePage() {
   const { id } = useParams<{ id: string }>()
+  const router = useRouter()
   const [name, setName] = useState('')
   const [rows, setRows] = useState<TemplateDetail[]>([])
   const [isUsed, setIsUsed] = useState(false)
@@ -37,6 +38,15 @@ export default function EditTemplatePage() {
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-12">
       <div className="max-w-2xl mx-auto">
+        <div className="mb-4">
+          <button
+            onClick={() => router.push(`/templates/${id}`)}
+            className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
+          >
+            <i className="fa-solid fa-arrow-left text-xs" />
+            Back
+          </button>
+        </div>
         <h1 className="text-2xl font-semibold text-gray-900 mb-6">Edit Template</h1>
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
           <TemplateForm initialName={name} initialRows={rows} initialIsUsed={isUsed} templateId={Number(id)} />
