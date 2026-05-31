@@ -50,6 +50,7 @@ export default function ExpensesPage() {
   const [deleting, setDeleting] = useState<number | null>(null)
   const [filterStart, setFilterStart] = useState('')
   const [filterEnd, setFilterEnd] = useState('')
+  const [hideTotal, setHideTotal] = useState(true)
 
   async function load(start?: string, end?: string) {
     let query = supabase
@@ -225,9 +226,15 @@ export default function ExpensesPage() {
               <span className="text-sm font-bold text-[#F4B342]">Total</span>
               <span className="text-xs text-white/60">| {expenses.length} record{expenses.length !== 1 ? 's' : ''}</span>
               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#F4B342] text-xs font-semibold text-[#121358]">
-                {total.toLocaleString('id-ID')}
-                {monthlyIncome > 0 && <span className="ml-1 opacity-70">({Math.round((total / monthlyIncome) * 100)}%)</span>}
+                {hideTotal ? '*****' : total.toLocaleString('id-ID')}
+                {!hideTotal && monthlyIncome > 0 && <span className="ml-1 opacity-70">({Math.round((total / monthlyIncome) * 100)}%)</span>}
               </span>
+              <button
+                onClick={() => setHideTotal(h => !h)}
+                className="ml-auto text-white/60 hover:text-white transition-colors"
+              >
+                <i className={`fa-solid ${hideTotal ? 'fa-eye-slash' : 'fa-eye'} text-xs`}></i>
+              </button>
             </div>
 
             {/* Left / Right panels */}
@@ -258,7 +265,7 @@ export default function ExpensesPage() {
                         <p className="text-xs text-gray-700 truncate">{cat.top.expense_name}</p>
                         <p className="text-xs font-bold truncate" style={{ color: cat.color ?? '#6668a8' }}>{cat.name}</p>
                       </div>
-                      <span className="text-xs font-semibold text-gray-900 shrink-0">{Number(cat.top.amount).toLocaleString('id-ID')}</span>
+                      <span className="text-xs font-semibold text-gray-900 shrink-0">{hideTotal && idx === 0 ? '*****' : Number(cat.top.amount).toLocaleString('id-ID')}</span>
                     </div>
                   ) : null
                 ))}
