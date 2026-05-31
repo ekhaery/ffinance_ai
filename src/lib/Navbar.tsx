@@ -42,7 +42,7 @@ export default function Navbar() {
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-1 flex-1">
           <Link href="/outflow" className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${pathname.startsWith('/outflow') ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'}`}>
-            Outflow
+            +
           </Link>
           <Link href="/expenses" className={linkClass('/expenses')}>Expenses</Link>
           <Link href="/balance" className={linkClass('/balance')}>Balance</Link>
@@ -88,7 +88,7 @@ export default function Navbar() {
       {/* Mobile menu */}
       {mobileOpen && (
         <div className="md:hidden border-t border-gray-100 bg-white px-4 py-3 space-y-1">
-          <Link href="/outflow" className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${pathname.startsWith('/outflow') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>Outflow</Link>
+          <Link href="/outflow" className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${pathname.startsWith('/outflow') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>+</Link>
           <Link href="/expenses" className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/expenses') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>Expenses</Link>
           <Link href="/balance" className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/balance') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>Balance</Link>
           <Link href="/monthly-check" className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/monthly-check') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>Monthly Check</Link>
