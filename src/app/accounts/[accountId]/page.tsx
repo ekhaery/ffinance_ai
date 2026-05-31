@@ -83,6 +83,36 @@ export default function AccountDetailPage() {
   const [customEnd, setCustomEnd]       = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [hideAmounts, setHideAmounts] = useState(true)
+  const [showIncomeModal, setShowIncomeModal] = useState(false)
+  const [incomeAmount, setIncomeAmount] = useState('')
+  const [incomeDate, setIncomeDate] = useState(new Date().toISOString().slice(0, 10))
+  const [incomeSaving, setIncomeSaving] = useState(false)
+
+  async function handleAddIncome() {
+    const amount = Number(incomeAmount)
+    if (!amount || amount <= 0) return
+    setIncomeSaving(true)
+    await supabase.from('balance').insert({
+      account_id: Number(accountId),
+      amount,
+      type: BALANCE_TYPES.INCOME,
+      date: incomeDate,
+    })
+    setIncomeSaving(false)
+    setShowIncomeModal(false)
+    setIncomeAmount('')
+    setIncomeDate(new Date().toISOString().slice(0, 10))
+    // Reload
+    const { data: bals } = await supabase
+      .from('balance')
+      .select('id, amount, date, type, expenses(expense_name, subcategories(categories(name)))')
+      .eq('account_id', accountId)
+      .order('date', { ascending: true })
+      .order('id', { ascending: true })
+    const rows = (bals as unknown as BalanceRecord[]) ?? []
+    setCurrentBalance(rows.reduce((s, r) => s + Number(r.amount), 0))
+    setAllRecords(rows)
+  }
 
   // Load account, full balance history, and categories (once)
   useEffect(() => {
@@ -288,6 +318,19 @@ export default function AccountDetailPage() {
           </div>
         )}
 
+        {/* Income button */}
+        {!loading && (
+          <div className="flex justify-end">
+            <button
+              onClick={() => setShowIncomeModal(true)}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#121358] text-white text-sm font-semibold hover:bg-[#6668a8] transition-colors"
+            >
+              <i className="fa-solid fa-plus text-xs" />
+              Add Income
+            </button>
+          </div>
+        )}
+
         {/* Transaction list */}
         {loading ? (
           <p className="text-sm text-gray-400 text-center py-8">Loading…</p>
@@ -364,6 +407,50 @@ export default function AccountDetailPage() {
           </div>
         )}
       </div>
+
+      {/* Income Modal */}
+      {showIncomeModal && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 space-y-4">
+            <h2 className="text-base font-bold text-[#121358]">Add Income</h2>
+            <div>
+              <label className="block text-xs font-semibold text-gray-600 mb-1">Amount</label>
+              <input
+                type="number"
+                value={incomeAmount}
+                onChange={(e) => setIncomeAmount(e.target.value)}
+                placeholder="0"
+                className="w-full rounded-2xl border border-[#F4B342] px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#F4B342]"
+                autoFocus
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-600 mb-1">Date</label>
+              <input
+                type="date"
+                value={incomeDate}
+                onChange={(e) => setIncomeDate(e.target.value)}
+                className="w-full rounded-2xl border border-[#F4B342] px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#F4B342]"
+              />
+            </div>
+            <div className="flex gap-2 pt-1">
+              <button
+                onClick={() => { setShowIncomeModal(false); setIncomeAmount('') }}
+                className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddIncome}
+                disabled={incomeSaving || !incomeAmount}
+                className="flex-1 rounded-lg bg-[#121358] px-4 py-2 text-sm font-semibold text-white hover:bg-[#6668a8] disabled:opacity-50 transition-colors"
+              >
+                {incomeSaving ? 'Saving…' : 'Save'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }
