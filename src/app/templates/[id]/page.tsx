@@ -9,7 +9,7 @@ type DetailRow = {
   id: number
   name: string | null
   amount: number
-  categories: { name: string }
+  categories: { name: string; color: string }
   subcategories: { name: string }
 }
 
@@ -26,7 +26,7 @@ export default function ViewTemplatePage() {
   useEffect(() => {
     supabase
       .from('templates')
-      .select('template_name, created_at, template_details(id, name, amount, categories(name), subcategories(name))')
+      .select('template_name, created_at, template_details(id, name, amount, categories(name, color), subcategories(name))')
       .eq('id', id)
       .single()
       .then(({ data }) => setData(data as unknown as TemplateData))
@@ -72,7 +72,7 @@ export default function ViewTemplatePage() {
             <thead className="border-b border-gray-100 bg-gray-50 text-xs uppercase text-gray-500">
               <tr>
                 <th className="px-5 py-3 text-left">Name</th>
-                <th className="px-5 py-3 text-left">Category</th>
+                <th className="px-5 py-3 text-left hidden md:table-cell">Category</th>
                 <th className="px-5 py-3 text-left">Subcategory</th>
                 <th className="px-5 py-3 text-right">Amount</th>
               </tr>
@@ -80,8 +80,10 @@ export default function ViewTemplatePage() {
             <tbody className="divide-y divide-gray-50">
               {data.template_details.map((d) => (
                 <tr key={d.id} className="hover:bg-gray-50">
-                  <td className="px-5 py-3 text-gray-700">{d.name ?? <span className="text-gray-400">—</span>}</td>
-                  <td className="px-5 py-3 text-gray-700">{d.categories?.name}</td>
+                  <td className="px-5 py-3 font-medium" style={{ color: d.categories?.color ?? '#6668a8' }}>
+                    {d.name ?? <span className="text-gray-400">—</span>}
+                  </td>
+                  <td className="px-5 py-3 text-gray-700 hidden md:table-cell">{d.categories?.name}</td>
                   <td className="px-5 py-3 text-gray-700">{d.subcategories?.name}</td>
                   <td className="px-5 py-3 text-right font-medium text-gray-900">
                     {Number(d.amount).toLocaleString('id-ID')}
@@ -91,7 +93,8 @@ export default function ViewTemplatePage() {
             </tbody>
             <tfoot className="border-t border-gray-200 bg-gray-50">
               <tr>
-                <td colSpan={3} className="px-5 py-3 text-sm font-semibold text-gray-700">Total Budget</td>
+                <td colSpan={2} className="px-5 py-3 text-sm font-semibold text-gray-700 md:hidden">Total Budget</td>
+                <td colSpan={3} className="px-5 py-3 text-sm font-semibold text-gray-700 hidden md:table-cell">Total Budget</td>
                 <td className="px-5 py-3 text-right text-sm font-bold text-gray-900">{total.toLocaleString('id-ID')}</td>
               </tr>
             </tfoot>
