@@ -188,12 +188,7 @@ export default function ExpensesPage() {
 
         {/* Header */}
         <div className="mb-4">
-          <div className="flex items-baseline gap-2">
-            <h1 className="text-2xl font-bold text-gray-900">Expenses</h1>
-            {!loading && expenses.length > 0 && (
-              <span className="text-xs text-gray-500">| {expenses.length} record{expenses.length !== 1 ? 's' : ''}</span>
-            )}
-          </div>
+          <h1 className="text-2xl font-bold text-gray-900">Expenses</h1>
         </div>
 
         {/* Date range filter */}
@@ -228,6 +223,7 @@ export default function ExpensesPage() {
             {/* Total row */}
             <div className="px-4 py-3 border-b border-gray-100 flex items-center gap-2 bg-[#121358]">
               <span className="text-sm font-bold text-[#F4B342]">Total</span>
+              <span className="text-xs text-white/60">| {expenses.length} record{expenses.length !== 1 ? 's' : ''}</span>
               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#F4B342] text-xs font-semibold text-[#121358]">
                 {total.toLocaleString('id-ID')}
                 {monthlyIncome > 0 && <span className="ml-1 opacity-70">({Math.round((total / monthlyIncome) * 100)}%)</span>}
