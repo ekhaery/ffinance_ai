@@ -82,6 +82,7 @@ export default function AccountDetailPage() {
   const [customStart, setCustomStart]   = useState('')
   const [customEnd, setCustomEnd]       = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [hideAmounts, setHideAmounts] = useState(true)
 
   // Load account, full balance history, and categories (once)
   useEffect(() => {
@@ -156,7 +157,7 @@ export default function AccountDetailPage() {
   ]
 
   return (
-    <main className="min-h-screen bg-[#FFF5E5] px-4 py-8">
+    <main className="min-h-screen bg-[#ffffff] px-4 py-8">
       <div className="max-w-3xl mx-auto space-y-5">
 
         {/* Back + account name */}
@@ -196,7 +197,7 @@ export default function AccountDetailPage() {
               ))}
             </div>
             {rangeKey === 'custom' && (
-              <div className="grid grid-cols-2 gap-3 pt-1 bg-[#FFF5E5] rounded-2xl p-3">
+              <div className="grid grid-cols-2 gap-3 pt-1 bg-[#FFFDE1] rounded-2xl p-3">
                 <div>
                   <label className="block text-xs font-semibold text-[#3F9AAE] mb-1">Start Date</label>
                   <input type="date" value={customStart} onChange={(e) => setCustomStart(e.target.value)}
@@ -212,7 +213,7 @@ export default function AccountDetailPage() {
           </div>
 
           {/* Divider */}
-          {categories.length > 0 && <div className="border-t-2 border-[#FFF5E5] mx-5" />}
+          {categories.length > 0 && <div className="border-t-2 border-[#ffffff] mx-5" />}
 
           {/* Category */}
           {categories.length > 0 && (
@@ -234,51 +235,52 @@ export default function AccountDetailPage() {
           )}
         </div>
 
-        {/* Summary section */}
+        {/* Summary section — two cards side by side */}
         {!loading && (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-5 py-4 space-y-4">
-            {/* Balance + Used + Income */}
-            <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-5 gap-3">
+
+            {/* Left card: Balance / Used / Income */}
+            <div className="col-span-2 bg-[#3F9AAE] rounded-2xl shadow-sm px-4 py-4 space-y-3">
               <div>
-                <p className="text-xs text-gray-400 uppercase tracking-wide font-medium">Balance</p>
-                <p className={`text-lg font-bold mt-1 ${currentBalance < 0 ? 'text-[#FA6781]' : 'text-[#3F9AAE]'}`}>
-                  {currentBalance < 0 ? '-' : ''}{fmt(currentBalance)}
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-white/70 uppercase tracking-wide font-medium">Balance</p>
+                  <button onClick={() => setHideAmounts(h => !h)} className="text-white/60 hover:text-white transition-colors">
+                    <i className={`fa-solid ${hideAmounts ? 'fa-eye' : 'fa-eye-slash'} text-xs`} />
+                  </button>
+                </div>
+                <p className={`text-base font-bold mt-0.5 ${currentBalance < 0 ? 'text-[#FA6781]' : 'text-white'}`}>
+                  {hideAmounts ? '****' : `${currentBalance < 0 ? '-' : ''}${fmt(currentBalance)}`}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-400 uppercase tracking-wide font-medium">Used</p>
-                <p className="text-lg font-bold text-[#FA6781] mt-1">{fmt(used)}</p>
+                <p className="text-xs text-white/70 uppercase tracking-wide font-medium">Used</p>
+                <p className="text-base font-bold text-[#FFE2AF] mt-0.5">{hideAmounts ? '****' : fmt(used)}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-400 uppercase tracking-wide font-medium">Income</p>
-                <p className="text-lg font-bold text-[#3F9AAE] mt-1">{fmt(income)}</p>
+                <p className="text-xs text-white/70 uppercase tracking-wide font-medium">Income</p>
+                <p className="text-base font-bold text-white mt-0.5">{hideAmounts ? '****' : fmt(income)}</p>
               </div>
             </div>
 
-            {/* Category breakdown */}
-            {categories.length > 0 && (
-              <div className="pt-3 border-t border-gray-100 space-y-2">
-                {categories.map((cat) => {
-                  const amount = catTotals[cat.name] ?? 0
-                  const pct = income > 0 ? Math.round((amount / income) * 100) : 0
-                  return (
-                    <div key={cat.id} className="flex items-center justify-between gap-2">
-                      <span className="text-sm text-gray-600 w-36 shrink-0">{cat.name}</span>
-                      <span className="text-xs font-semibold text-gray-500 w-10 text-right shrink-0">{pct}%</span>
-                      <span className="text-sm text-gray-700 text-right flex-1">{fmt(amount)}</span>
-                    </div>
-                  )
-                })}
-                {/* Other = Transfer Out */}
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm text-gray-600 w-36 shrink-0">Other</span>
-                  <span className="text-xs font-semibold text-gray-500 w-10 text-right shrink-0">
-                    {income > 0 ? Math.round((transferOut / income) * 100) : 0}%
-                  </span>
-                  <span className="text-sm text-gray-700 text-right flex-1">{fmt(transferOut)}</span>
-                </div>
+            {/* Right card: Category % */}
+            <div className="col-span-3 bg-[#FFE2AF] rounded-2xl shadow-sm px-4 py-4 space-y-2">
+              {categories.map((cat) => {
+                const pct = income > 0 ? Math.round(((catTotals[cat.name] ?? 0) / income) * 100) : 0
+                return (
+                  <div key={cat.id} className="flex items-center justify-between">
+                    <span className="text-xs text-gray-600 truncate mr-1">{cat.name}</span>
+                    <span className="text-xs font-bold text-[#3F9AAE] shrink-0">{pct}%</span>
+                  </div>
+                )
+              })}
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-600 truncate mr-1">Other</span>
+                <span className="text-xs font-bold text-[#3F9AAE] shrink-0">
+                  {income > 0 ? Math.round((transferOut / income) * 100) : 0}%
+                </span>
               </div>
-            )}
+            </div>
+
           </div>
         )}
 
@@ -291,7 +293,7 @@ export default function AccountDetailPage() {
           </div>
         ) : (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            <div className="px-5 py-3 border-b border-gray-100 bg-[#FFF5E5]/50">
+            <div className="px-5 py-3 border-b border-gray-100 bg-[#ffffff]/50">
               <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">
                 {displayRecords.length} transaction{displayRecords.length !== 1 ? 's' : ''}
               </span>
@@ -300,7 +302,7 @@ export default function AccountDetailPage() {
             {/* Desktop table */}
             <div className="hidden sm:block overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="border-b border-gray-100 text-xs uppercase text-gray-400 bg-[#FFF5E5]/50">
+                <thead className="border-b border-gray-100 text-xs uppercase text-gray-400 bg-[#ffffff]/50">
                   <tr>
                     <th className="px-5 py-2.5 text-left font-medium">Date</th>
                     <th className="px-5 py-2.5 text-left font-medium">Type</th>
