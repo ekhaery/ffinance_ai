@@ -133,14 +133,14 @@ export default function CreateExpensePage() {
     if (Object.keys(errs).length) { setErrors(errs); return }
     setErrors({})
     setSubmitting(true)
-    const { error } = await supabase.from('expenses').insert({
+    const { data: newExpense, error } = await supabase.from('expenses').insert({
       expense_name: form.expense_name.trim(),
       amount: Number(form.amount),
       subcategory_id: Number(form.subcategory_id),
       family_member: form.family_member || null,
       account_id: form.account_id ? Number(form.account_id) : null,
       balance_recorded: !!form.account_id,
-    })
+    }).select('id').single()
     setSubmitting(false)
     if (error) { setErrors({ submit: error.message }); return }
 
@@ -151,6 +151,7 @@ export default function CreateExpensePage() {
         amount: -Number(form.amount),
         type: BALANCE_TYPES.EXPENSE,
         date: new Date().toISOString().slice(0, 10),
+        expense_id: newExpense?.id ?? null,
       })
     }
     setSuccess(true)

@@ -117,22 +117,23 @@ export default function ExpensesPage() {
       balance_recorded: newAccountId ? true : false,
     }).eq('id', editTarget.id)
 
+    const expenseId = editTarget.id
     if (!wasRecorded) {
       // Old expense with no prior balance entry — apply full deduction to new account
       if (newAccountId) {
-        await supabase.from('balance').insert({ account_id: newAccountId, amount: -newAmount, type: BALANCE_TYPES.EXPENSE, date: today })
+        await supabase.from('balance').insert({ account_id: newAccountId, amount: -newAmount, type: BALANCE_TYPES.EXPENSE, date: today, expense_id: expenseId })
       }
     } else if (oldAccountId !== newAccountId) {
       // Account changed: fully reverse old, fully deduct new
       if (oldAccountId) {
-        await supabase.from('balance').insert({ account_id: oldAccountId, amount: oldAmount, type: BALANCE_TYPES.EXPENSE, date: today })
+        await supabase.from('balance').insert({ account_id: oldAccountId, amount: oldAmount, type: BALANCE_TYPES.EXPENSE, date: today, expense_id: expenseId })
       }
       if (newAccountId) {
-        await supabase.from('balance').insert({ account_id: newAccountId, amount: -newAmount, type: BALANCE_TYPES.EXPENSE, date: today })
+        await supabase.from('balance').insert({ account_id: newAccountId, amount: -newAmount, type: BALANCE_TYPES.EXPENSE, date: today, expense_id: expenseId })
       }
     } else if (newAccountId && oldAmount !== newAmount) {
       // Same account, amount changed: apply the difference only
-      await supabase.from('balance').insert({ account_id: newAccountId, amount: -(newAmount - oldAmount), type: BALANCE_TYPES.EXPENSE, date: today })
+      await supabase.from('balance').insert({ account_id: newAccountId, amount: -(newAmount - oldAmount), type: BALANCE_TYPES.EXPENSE, date: today, expense_id: expenseId })
     }
 
     setSaving(false)
