@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { BALANCE_TYPES } from '@/lib/constants'
 
 type Account = { id: number; name: string }
 
@@ -51,8 +52,8 @@ export default function PemindahanDanaPage() {
     const today = new Date().toISOString().slice(0, 10)
 
     await supabase.from('balance').insert([
-      { account_id: fromId, amount: -amt, type: 'transfer_out', date: today },
-      { account_id: toId, amount: amt, type: 'transfer_in', date: today },
+      { account_id: fromId, amount: -amt, type: BALANCE_TYPES.TRANSFER_OUT, date: today },
+      { account_id: toId, amount: amt, type: BALANCE_TYPES.TRANSFER_IN, date: today },
     ])
 
     setSubmitting(false)

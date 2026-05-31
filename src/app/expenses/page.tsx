@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { FAMILY_MEMBERS } from '@/lib/constants'
+import { FAMILY_MEMBERS, BALANCE_TYPES } from '@/lib/constants'
 
 type Subcategory = { id: number; name: string; category_id: number }
 type Category = { id: number; name: string }
@@ -15,6 +15,7 @@ type Expense = {
   family_member: string | null
   subcategory_id: number
   account_id: number | null
+  balance_recorded: boolean
   subcategories: { name: string; categories: { name: string } }
   accounts: { name: string } | null
 }
@@ -49,7 +50,7 @@ export default function ExpensesPage() {
   async function load() {
     const { data } = await supabase
       .from('expenses')
-      .select('id, expense_name, amount, date, family_member, subcategory_id, account_id, subcategories(name, categories(name)), accounts(name)')
+      .select('id, expense_name, amount, date, family_member, subcategory_id, account_id, balance_recorded, subcategories(name, categories(name)), accounts(name)')
       .order('date', { ascending: false })
       .order('id', { ascending: false })
     setExpenses((data as unknown as Expense[]) ?? [])
@@ -78,7 +79,17 @@ export default function ExpensesPage() {
   async function handleDelete(id: number) {
     if (!confirm('Delete this expense?')) return
     setDeleting(id)
+    const expense = expenses.find((e) => e.id === id)
     await supabase.from('expenses').delete().eq('id', id)
+    // Restore balance only if this expense had its balance recorded
+    if (expense?.account_id && expense.balance_recorded) {
+      await supabase.from('balance').insert({
+        account_id: expense.account_id,
+        amount: Number(expense.amount),
+        type: BALANCE_TYPES.EXPENSE,
+        date: new Date().toISOString().slice(0, 10),
+      })
+    }
     setDeleting(null)
     load()
   }
@@ -86,15 +97,43 @@ export default function ExpensesPage() {
   async function handleSave() {
     if (!editTarget || !editForm) return
     setSaving(true)
+
+    const oldAmount = Number(editTarget.amount)
+    const newAmount = Number(editForm.amount)
+    const oldAccountId = editTarget.account_id ?? null
+    const newAccountId = editForm.account_id ? Number(editForm.account_id) : null
+    const wasRecorded = editTarget.balance_recorded
+    const today = new Date().toISOString().slice(0, 10)
+
     await supabase.from('expenses').update({
       expense_name: editForm.expense_name.trim(),
-      amount: Number(editForm.amount),
+      amount: newAmount,
       subcategory_id: Number(editForm.subcategory_id),
       family_member: editForm.family_member || null,
-      account_id: editForm.account_id ? Number(editForm.account_id) : null,
+      account_id: newAccountId,
       date: editForm.date,
       updated_at: new Date().toISOString(),
+      balance_recorded: newAccountId ? true : false,
     }).eq('id', editTarget.id)
+
+    if (!wasRecorded) {
+      // Old expense with no prior balance entry — apply full deduction to new account
+      if (newAccountId) {
+        await supabase.from('balance').insert({ account_id: newAccountId, amount: -newAmount, type: BALANCE_TYPES.EXPENSE, date: today })
+      }
+    } else if (oldAccountId !== newAccountId) {
+      // Account changed: fully reverse old, fully deduct new
+      if (oldAccountId) {
+        await supabase.from('balance').insert({ account_id: oldAccountId, amount: oldAmount, type: BALANCE_TYPES.EXPENSE, date: today })
+      }
+      if (newAccountId) {
+        await supabase.from('balance').insert({ account_id: newAccountId, amount: -newAmount, type: BALANCE_TYPES.EXPENSE, date: today })
+      }
+    } else if (newAccountId && oldAmount !== newAmount) {
+      // Same account, amount changed: apply the difference only
+      await supabase.from('balance').insert({ account_id: newAccountId, amount: -(newAmount - oldAmount), type: BALANCE_TYPES.EXPENSE, date: today })
+    }
+
     setSaving(false)
     setEditTarget(null)
     setEditForm(null)

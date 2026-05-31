@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { FAMILY_MEMBERS } from '@/lib/constants'
+import { FAMILY_MEMBERS, BALANCE_TYPES } from '@/lib/constants'
 
 type Subcategory = { id: number; name: string; categories: { name: string } | null }
 type Account = { id: number; name: string }
@@ -139,9 +139,20 @@ export default function CreateExpensePage() {
       subcategory_id: Number(form.subcategory_id),
       family_member: form.family_member || null,
       account_id: form.account_id ? Number(form.account_id) : null,
+      balance_recorded: !!form.account_id,
     })
     setSubmitting(false)
     if (error) { setErrors({ submit: error.message }); return }
+
+    // Deduct from account balance
+    if (form.account_id) {
+      await supabase.from('balance').insert({
+        account_id: Number(form.account_id),
+        amount: -Number(form.amount),
+        type: BALANCE_TYPES.EXPENSE,
+        date: new Date().toISOString().slice(0, 10),
+      })
+    }
     setSuccess(true)
     setForm({ expense_name: '', amount: '', subcategory_id: '', family_member: '', account_id: '' })
     setSubQuery('')

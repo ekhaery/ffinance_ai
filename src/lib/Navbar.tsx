@@ -69,7 +69,7 @@ export default function Navbar() {
             )}
           </div>
           <Link href="/expenses" className={linkClass('/expenses')}>Expenses</Link>
-          <Link href="/income" className={linkClass('/income')}>Income</Link>
+          <Link href="/balance" className={linkClass('/balance')}>Balance</Link>
           <Link href="/monthly-check" className={linkClass('/monthly-check')}>Monthly Check</Link>
 
           {/* Setting dropdown */}
@@ -136,8 +136,8 @@ export default function Navbar() {
           <Link href="/expenses" className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/expenses') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
             Expenses
           </Link>
-          <Link href="/income" className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/income') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
-            Income
+          <Link href="/balance" className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/balance') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
+            Balance
           </Link>
           <Link href="/monthly-check" className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/monthly-check') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
             Monthly Check
