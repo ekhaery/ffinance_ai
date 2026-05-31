@@ -34,6 +34,15 @@ export default function BalancePage() {
   const [transferOutMap, setTransferOutMap] = useState<Record<number, number>>({})
   const [spendingMap, setSpendingMap] = useState<SpendingMap>({})
   const [loading, setLoading] = useState(true)
+  const [hiddenCards, setHiddenCards] = useState<Record<number, boolean>>({})
+
+  function toggleHide(e: React.MouseEvent, id: number) {
+    e.stopPropagation()
+    setHiddenCards((prev) => ({ ...prev, [id]: !prev[id] }))
+  }
+
+  // By default all cards are hidden — treat undefined as hidden
+  function isHidden(id: number) { return hiddenCards[id] !== false }
 
   useEffect(() => {
     async function load() {
@@ -111,7 +120,7 @@ export default function BalancePage() {
             <p className="text-gray-400 text-sm">No accounts yet.</p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2">
             {accounts.map((a) => {
               const bal = balanceMap[a.id] ?? 0
               const catTotals = spendingMap[a.id] ?? {}
@@ -122,15 +131,25 @@ export default function BalancePage() {
                 <div
                   key={a.id}
                   onClick={() => router.push(`/balance/${a.id}`)}
-                  className="bg-white rounded-2xl border border-gray-100 border-t-4 border-t-[#FFC94D] shadow-sm px-5 py-4 cursor-pointer hover:shadow-md hover:border-gray-200 transition-all"
+                  className="bg-white rounded-2xl border border-gray-100 border-t-4 border-t-[#FFC94D] shadow-sm px-4 py-3 cursor-pointer hover:shadow-md hover:border-gray-200 transition-all"
                 >
                   {/* Account name + balance */}
-                  <p className="text-base font-semibold text-gray-900">{a.name}</p>
-                  {a.description && (
-                    <p className="text-sm text-gray-400 mt-0.5">{a.description}</p>
-                  )}
-                  <p className={`text-2xl font-bold mt-3 ${bal < 0 ? 'text-[#FA6781]' : 'text-[#121358]'}`}>
-                    {bal < 0 ? '-' : ''}{Math.abs(bal).toLocaleString('id-ID')}
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-base font-semibold text-gray-900 uppercase">{a.name}</p>
+                      {a.description && (
+                        <p className="text-xs text-gray-400 lowercase tracking-wide"><span className="font-bold">|</span> {a.description}</p>
+                      )}
+                    </div>
+                    <button
+                      onClick={(e) => toggleHide(e, a.id)}
+                      className="text-gray-400 hover:text-gray-600 transition-colors mt-0.5 ml-2 shrink-0"
+                    >
+                      <i className={`fa-solid ${isHidden(a.id) ? 'fa-eye-slash' : 'fa-eye'} text-xs`} />
+                    </button>
+                  </div>
+                  <p className={`text-base font-bold mt-2 ${bal < 0 ? 'text-[#FA6781]' : 'text-[#121358]'}`}>
+                    {isHidden(a.id) ? '****' : `${bal < 0 ? '-' : ''}${Math.abs(bal).toLocaleString('id-ID')}`}
                   </p>
 
                   {/* Category spending percentages */}
