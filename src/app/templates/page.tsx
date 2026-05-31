@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Template } from '@/lib/types'
 
 export default function TemplateListPage() {
+  const router = useRouter()
   const [templates, setTemplates] = useState<Template[]>([])
   const [loading, setLoading] = useState(true)
   const [deleting, setDeleting] = useState<number | null>(null)
@@ -69,7 +71,7 @@ export default function TemplateListPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-50">
                   {templates.map((t) => (
-                    <tr key={t.id} className="hover:bg-gray-50 transition-colors">
+                    <tr key={t.id} onClick={() => router.push(`/templates/${t.id}`)} className="hover:bg-gray-50 transition-colors cursor-pointer">
                       <td className="px-5 py-4 font-medium text-gray-900">
                         <span>{t.template_name}</span>
                         {t.is_used && (
@@ -85,10 +87,9 @@ export default function TemplateListPage() {
                         {new Date(t.created_at).toLocaleDateString('id-ID')}
                       </td>
                       <td className="px-5 py-4 text-right space-x-3">
-                        <Link href={`/templates/${t.id}`} className="text-[#121358] hover:underline">View</Link>
-                        <Link href={`/templates/${t.id}/edit`} className="text-amber-600 hover:underline"><i className="fa-solid fa-pen"></i></Link>
+                        <Link href={`/templates/${t.id}/edit`} onClick={(e) => e.stopPropagation()} className="text-amber-600 hover:underline"><i className="fa-solid fa-pen"></i></Link>
                         <button
-                          onClick={() => handleDelete(t.id)}
+                          onClick={(e) => { e.stopPropagation(); handleDelete(t.id) }}
                           disabled={deleting === t.id}
                           className="text-[#FA6781] hover:underline disabled:opacity-40"
                         >
@@ -104,7 +105,7 @@ export default function TemplateListPage() {
             {/* Mobile cards */}
             <div className="md:hidden space-y-3">
               {templates.map((t) => (
-                <div key={t.id} className={`bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3 transition-opacity ${deleting === t.id ? 'opacity-40' : ''}`}>
+                <div key={t.id} onClick={() => router.push(`/templates/${t.id}`)} className={`bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3 transition-opacity cursor-pointer ${deleting === t.id ? 'opacity-40' : ''}`}>
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <div className="flex items-center gap-2 flex-wrap">
@@ -124,9 +125,8 @@ export default function TemplateListPage() {
                     </span>
                   </div>
                   <div className="flex gap-3 mt-2 justify-end">
-                    <Link href={`/templates/${t.id}`} className="text-sm font-medium text-[#121358]">View</Link>
-                    <Link href={`/templates/${t.id}/edit`} className="text-sm font-medium text-amber-600"><i className="fa-solid fa-pen"></i></Link>
-                    <button onClick={() => handleDelete(t.id)} disabled={deleting === t.id} className="text-sm font-medium text-[#FA6781] disabled:opacity-40">
+                    <Link href={`/templates/${t.id}/edit`} onClick={(e) => e.stopPropagation()} className="text-sm font-medium text-amber-600"><i className="fa-solid fa-pen"></i></Link>
+                    <button onClick={(e) => { e.stopPropagation(); handleDelete(t.id) }} disabled={deleting === t.id} className="text-sm font-medium text-[#FA6781] disabled:opacity-40">
                       <i className={`fa-solid fa-trash ${deleting === t.id ? 'opacity-40' : ''}`}></i>
                     </button>
                   </div>

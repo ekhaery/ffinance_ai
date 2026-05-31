@@ -158,7 +158,7 @@ export default function MonthlyCheckPage() {
         <div className="mb-5 flex items-center gap-3">
           <div className="flex-1 h-2 rounded-full bg-gray-200 overflow-hidden">
             <div
-              className="h-full bg-[#121358] rounded-full transition-all duration-500"
+              className="h-full bg-[#F4B342] rounded-full transition-all duration-500"
               style={{ width: `${total > 0 ? (checkedTotal / total) * 100 : 0}%` }}
             />
           </div>
@@ -185,7 +185,7 @@ export default function MonthlyCheckPage() {
                       return (
                         <tr
                           key={d.id}
-                          className={`border-b border-gray-50 transition-colors ${isChecked ? 'bg-[#121358]/10' : 'hover:bg-gray-50'}`}
+                          className={`border-b border-gray-50 transition-colors ${isChecked ? 'bg-[#F4B342]/10' : 'hover:bg-gray-50'}`}
                         >
                           <td className="px-5 py-3">
                             {d.name ? (
@@ -208,10 +208,10 @@ export default function MonthlyCheckPage() {
                               title={isChecked ? 'Already recorded' : 'Mark as done'}
                               className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ml-auto ${
                                 isChecked
-                                  ? 'border-[#121358] bg-[#121358] cursor-default'
+                                  ? 'border-[#F4B342] bg-[#F4B342] cursor-default'
                                   : isSaving
                                   ? 'border-gray-300 opacity-50'
-                                  : 'border-gray-300 hover:border-[#121358]'
+                                  : 'border-gray-300 hover:border-[#F4B342]'
                               }`}
                             >
                               {isChecked && (
@@ -235,9 +235,9 @@ export default function MonthlyCheckPage() {
         {/* Totals */}
         <div className="mt-4 flex justify-end gap-3">
           {checked.size > 0 && (
-            <div className="rounded-xl bg-[#121358] px-6 py-3 text-right">
-              <p className="text-xs text-white/70 mb-0.5">Posted</p>
-              <p className="text-lg font-bold text-white">{checkedTotal.toLocaleString('id-ID')}</p>
+            <div className="rounded-xl bg-[#F4B342] px-6 py-3 text-right">
+              <p className="text-xs text-[#121358]/70 mb-0.5">Posted</p>
+              <p className="text-lg font-bold text-[#121358]">{checkedTotal.toLocaleString('id-ID')}</p>
             </div>
           )}
           <div className="rounded-xl bg-[#121358] px-6 py-3 text-right">

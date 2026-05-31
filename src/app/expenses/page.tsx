@@ -42,6 +42,7 @@ export default function ExpensesPage() {
   const [categories, setCategories] = useState<Category[]>([])
   const [subcategories, setSubcategories] = useState<Subcategory[]>([])
   const [accounts, setAccounts] = useState<{ id: number; name: string }[]>([])
+  const [monthlyIncome, setMonthlyIncome] = useState(0)
   const [loading, setLoading] = useState(true)
   const [editTarget, setEditTarget] = useState<Expense | null>(null)
   const [editForm, setEditForm] = useState<EditForm | null>(null)
@@ -63,6 +64,18 @@ export default function ExpensesPage() {
     supabase.from('categories').select('id, name').order('name').then(({ data }) => setCategories(data ?? []))
     supabase.from('subcategories').select('id, name, category_id').order('name').then(({ data }) => setSubcategories(data ?? []))
     supabase.from('accounts').select('id, name').order('name').then(({ data }) => setAccounts(data ?? []))
+    // Fetch current month income
+    const now = new Date()
+    const y = now.getFullYear()
+    const m = String(now.getMonth() + 1).padStart(2, '0')
+    const start = `${y}-${m}-01`
+    const end = `${y}-${m}-${String(new Date(y, now.getMonth() + 1, 0).getDate()).padStart(2, '0')}`
+    supabase.from('balance').select('amount, type').gte('date', start).lte('date', end)
+      .then(({ data }) => {
+        const income = (data ?? []).filter((r: { type: string }) => r.type === 'income' || r.type === 'transfer_in')
+          .reduce((s: number, r: { amount: number }) => s + Number(r.amount), 0)
+        setMonthlyIncome(income)
+      })
   }, [])
 
   function openEdit(e: Expense) {
@@ -159,14 +172,17 @@ export default function ExpensesPage() {
       <div className="max-w-3xl mx-auto">
 
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-xl font-semibold text-gray-900">Expenses</h1>
+        <div className="mb-6">
+          <div className="flex items-baseline gap-2">
+            <h1 className="text-2xl font-bold text-gray-900">Expenses</h1>
+            {!loading && expenses.length > 0 && (
+              <span className="text-xs text-gray-500">| {expenses.length} record{expenses.length !== 1 ? 's' : ''}</span>
+            )}
           </div>
           {!loading && expenses.length > 0 && (
-            <span className="text-xs text-gray-500 text-right leading-snug">
-              {expenses.length} record{expenses.length !== 1 ? 's' : ''}<br />
-              <span className="font-semibold text-gray-800">{total.toLocaleString('id-ID')}</span>
+            <span className="inline-flex items-center mt-1 px-3 py-0.5 rounded-full bg-[#F4B342] text-xs font-semibold text-[#121358]">
+              {total.toLocaleString('id-ID')}
+              {monthlyIncome > 0 && <span className="ml-1 opacity-70">({Math.round((total / monthlyIncome) * 100)}%)</span>}
             </span>
           )}
         </div>
@@ -185,12 +201,9 @@ export default function ExpensesPage() {
               return (
                 <div key={date} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                   {/* Card header */}
-                  <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-[#ffffff]/50">
-                    <span className="text-sm font-semibold text-gray-700 capitalize">
-                      {formatCardDate(date)}
-                    </span>
-                    <span className="text-xs font-semibold text-gray-500">
-                      {dayTotal.toLocaleString('id-ID')}
+                  <div className="px-4 py-3 border-b border-gray-100 bg-[#F4B342]">
+                    <span className="text-sm text-[#121358] capitalize">
+                      {formatCardDate(date)} <span className="font-bold">|</span> <span className="font-bold">{dayTotal.toLocaleString('id-ID')}</span>
                     </span>
                   </div>
 

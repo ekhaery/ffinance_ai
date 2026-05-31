@@ -163,7 +163,7 @@ export default function AccountDetailPage() {
         {/* Back + account name */}
         <div className="flex items-center justify-between">
           <button
-            onClick={() => router.push('/balance')}
+            onClick={() => router.push('/accounts')}
             className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
           >
             <i className="fa-solid fa-arrow-left text-xs" />

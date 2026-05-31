@@ -38,8 +38,9 @@ export default function Navbar() {
         <Link href="/outflow" className="font-bold text-[#ffffff] mr-4 text-lg tracking-tight hover:opacity-75 transition-opacity">FinFadel</Link>
 
         {/* Links — always visible */}
-        <div className="flex items-center gap-1 flex-1">
-          <Link href="/balance" className={linkClass('/balance')}>Balance</Link>
+        <div className="flex items-center gap-1 flex-1 justify-end">
+          <Link href="/accounts" className={linkClass('/accounts')}><i className="fa-solid fa-credit-card" /></Link>
+          <Link href="/expenses" className={linkClass('/expenses')}><i className="fa-solid fa-clock-rotate-left" /></Link>
 
           {/* Setting dropdown */}
           <div className="relative" ref={settingRef}>
