@@ -230,7 +230,7 @@ export default function TemplateForm({ initialName = '', initialRows, initialIsU
       )}
 
       {/* Default toggle */}
-      <div className="flex items-center justify-between rounded-xl border border-[#F4B342] bg-[#F4B342] px-4 py-3">
+      <div className="flex items-center justify-between rounded-xl border border-[#121358] bg-[#F4B342] px-4 py-3">
         <div>
           <p className="text-sm font-bold text-gray-900">Mark as my go-to budget plan</p>
           <p className="text-xs text-[#121358] mt-0.5">This template will be used as your active budget plan</p>
