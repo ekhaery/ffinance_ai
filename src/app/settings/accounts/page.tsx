@@ -89,7 +89,7 @@ export default function AccountsPage() {
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
                 placeholder="Account name *"
-                className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#121358] ${errors.create ? 'border-[#FA6781]' : 'border-gray-300'}`}
+                className={`w-full rounded-2xl border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#F4B342] ${errors.create ? 'border-[#FA6781]' : 'border-[#F4B342]'}`}
               />
               {errors.create && <p className="mt-1 text-xs text-[#FA6781]">{errors.create}</p>}
             </div>
@@ -98,7 +98,7 @@ export default function AccountsPage() {
               onChange={(e) => setNewDesc(e.target.value)}
               placeholder="Description (optional)"
               rows={2}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#121358] resize-none"
+              className="w-full rounded-2xl border border-[#F4B342] px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#F4B342] resize-none"
             />
             <button
               type="submit"
@@ -136,7 +136,7 @@ export default function AccountsPage() {
                               type="text"
                               value={editName}
                               onChange={(e) => setEditName(e.target.value)}
-                              className={`w-full rounded-lg border px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-[#121358] ${errors.edit ? 'border-[#FA6781]' : 'border-gray-300'}`}
+                              className={`w-full rounded-2xl border px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-[#F4B342] ${errors.edit ? 'border-[#FA6781]' : 'border-[#F4B342]'}`}
                             />
                             {errors.edit && <p className="text-xs text-[#FA6781]">{errors.edit}</p>}
                             <textarea
@@ -144,7 +144,7 @@ export default function AccountsPage() {
                               onChange={(e) => setEditDesc(e.target.value)}
                               rows={2}
                               placeholder="Description (optional)"
-                              className="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-[#121358] resize-none"
+                              className="w-full rounded-2xl border border-[#F4B342] px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-[#F4B342] resize-none"
                             />
                           </div>
                         </td>

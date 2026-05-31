@@ -87,7 +87,7 @@ export default function SubcategoriesPage() {
               <select
                 value={newCategoryId}
                 onChange={(e) => setNewCategoryId(e.target.value)}
-                className={`w-full rounded-lg border px-3 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-[#121358] ${errors.category ? 'border-[#FA6781]' : 'border-gray-300'}`}
+                className={`w-full rounded-2xl border px-3 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-[#F4B342] ${errors.category ? 'border-[#FA6781]' : 'border-[#F4B342]'}`}
               >
                 <option value="">Category</option>
                 {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -100,7 +100,7 @@ export default function SubcategoriesPage() {
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
                 placeholder="Subcategory name"
-                className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#121358] ${errors.name ? 'border-[#FA6781]' : 'border-gray-300'}`}
+                className={`w-full rounded-2xl border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#F4B342] ${errors.name ? 'border-[#FA6781]' : 'border-[#F4B342]'}`}
               />
               {errors.name && <p className="mt-1 text-xs text-[#FA6781]">{errors.name}</p>}
             </div>
@@ -138,7 +138,7 @@ export default function SubcategoriesPage() {
                           <select
                             value={editCategoryId}
                             onChange={(e) => setEditCategoryId(e.target.value)}
-                            className={`rounded-lg border px-2 py-1 text-sm bg-white outline-none focus:ring-2 focus:ring-[#121358] ${editErrors.category ? 'border-[#FA6781]' : 'border-gray-300'}`}
+                            className={`rounded-2xl border px-2 py-1 text-sm bg-white outline-none focus:ring-2 focus:ring-[#F4B342] ${editErrors.category ? 'border-[#FA6781]' : 'border-[#F4B342]'}`}
                           >
                             <option value="">Select</option>
                             {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -158,7 +158,7 @@ export default function SubcategoriesPage() {
                             onChange={(e) => setEditName(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleUpdate(sub.id)}
                             autoFocus
-                            className={`rounded-lg border px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-[#121358] ${editErrors.name ? 'border-[#FA6781]' : 'border-gray-300'}`}
+                            className={`rounded-2xl border px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-[#F4B342] ${editErrors.name ? 'border-[#FA6781]' : 'border-[#F4B342]'}`}
                           />
                           {editErrors.name && <p className="mt-0.5 text-xs text-[#FA6781]">{editErrors.name}</p>}
                         </div>

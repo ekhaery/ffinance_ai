@@ -74,7 +74,7 @@ export default function CategoriesPage() {
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
                 placeholder="Category name"
-                className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#121358] ${error ? 'border-[#FA6781]' : 'border-gray-300'}`}
+                className={`w-full rounded-2xl border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#F4B342] ${error ? 'border-[#FA6781]' : 'border-[#F4B342]'}`}
               />
               {error && <p className="mt-1 text-xs text-[#FA6781]">{error}</p>}
             </div>
@@ -114,7 +114,7 @@ export default function CategoriesPage() {
                             onChange={(e) => setEditName(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleUpdate(cat.id)}
                             autoFocus
-                            className={`rounded-lg border px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-[#121358] ${editError ? 'border-[#FA6781]' : 'border-gray-300'}`}
+                            className={`rounded-2xl border px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-[#F4B342] ${editError ? 'border-[#FA6781]' : 'border-[#F4B342]'}`}
                           />
                           {editError && <p className="mt-0.5 text-xs text-[#FA6781]">{editError}</p>}
                         </div>
