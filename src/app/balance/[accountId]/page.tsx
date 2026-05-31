@@ -159,103 +159,99 @@ export default function AccountDetailPage() {
     <main className="min-h-screen bg-[#FFFDE1] px-4 py-8">
       <div className="max-w-3xl mx-auto space-y-5">
 
-        {/* Back */}
-        <button
-          onClick={() => router.push('/balance')}
-          className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
-        >
-          <i className="fa-solid fa-arrow-left text-xs" />
-          Back
-        </button>
-
-        {/* Account header */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-5 py-4">
-          <p className="text-lg font-semibold text-gray-900">{account?.name ?? '…'}</p>
-          {account?.description && <p className="text-xs text-gray-400 mt-0.5">{account.description}</p>}
-          <p className={`text-2xl font-bold mt-2 ${currentBalance < 0 ? 'text-[#FA6781]' : 'text-[#3F9AAE]'}`}>
-            {currentBalance < 0 ? '-' : ''}{fmt(currentBalance)}
-          </p>
-          <p className="text-xs text-gray-400 mt-0.5">Current balance</p>
+        {/* Back + account name */}
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => router.push('/balance')}
+            className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
+          >
+            <i className="fa-solid fa-arrow-left text-xs" />
+            Back
+          </button>
+          <div className="text-right">
+            <p className="text-base font-semibold text-gray-900">{account?.name ?? '…'}</p>
+            {account?.description && <p className="text-xs text-gray-400">{account.description}</p>}
+          </div>
         </div>
 
         {/* Time range filter */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-5 py-4 space-y-3">
-          <p className="text-sm font-medium text-gray-700">Time Range</p>
-          <div className="flex flex-wrap gap-2">
-            {rangeOptions.map((o) => (
-              <button
-                key={o.key}
-                onClick={() => setRangeKey(o.key)}
-                className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
-                  rangeKey === o.key
-                    ? 'bg-[#3F9AAE] border-[#3F9AAE] text-white'
-                    : 'bg-white border-gray-300 text-gray-700 hover:border-[#3F9AAE] hover:text-[#3F9AAE]'
-                }`}
-              >
-                {o.label}
-              </button>
-            ))}
-          </div>
-          {rangeKey === 'custom' && (
-            <div className="grid grid-cols-2 gap-3 pt-1">
-              <div>
-                <label className="block text-xs text-gray-500 mb-1">Start Date</label>
-                <input type="date" value={customStart} onChange={(e) => setCustomStart(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#3F9AAE]" />
+        {/* Time Range + Category — single card */}
+        <div className="bg-[#FFE2AF] rounded-2xl border border-[#FFE2AF] shadow-sm overflow-hidden">
+          {/* Time Range */}
+          <div className="px-5 py-4 space-y-3">
+            <p className="text-sm font-bold text-[#3F9AAE]">Time Range</p>
+            <div className="flex flex-wrap gap-2">
+              {rangeOptions.map((o) => (
+                <button
+                  key={o.key}
+                  onClick={() => setRangeKey(o.key)}
+                  className={`px-2.5 py-1 rounded-full text-xs font-medium border transition-colors ${
+                    rangeKey === o.key
+                      ? 'bg-[#3F9AAE] border-[#3F9AAE] text-white'
+                      : 'bg-white border-gray-300 text-gray-700 hover:border-[#3F9AAE] hover:text-[#3F9AAE]'
+                  }`}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+            {rangeKey === 'custom' && (
+              <div className="grid grid-cols-2 gap-3 pt-1 bg-[#FFFDE1] rounded-2xl p-3">
+                <div>
+                  <label className="block text-xs font-semibold text-[#3F9AAE] mb-1">Start Date</label>
+                  <input type="date" value={customStart} onChange={(e) => setCustomStart(e.target.value)}
+                    className="w-full rounded-full border border-[#3F9AAE] px-4 py-1.5 text-sm bg-white outline-none focus:ring-2 focus:ring-[#3F9AAE]" />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-[#3F9AAE] mb-1">End Date</label>
+                  <input type="date" value={customEnd} onChange={(e) => setCustomEnd(e.target.value)}
+                    className="w-full rounded-full border border-[#3F9AAE] px-4 py-1.5 text-sm bg-white outline-none focus:ring-2 focus:ring-[#3F9AAE]" />
+                </div>
               </div>
-              <div>
-                <label className="block text-xs text-gray-500 mb-1">End Date</label>
-                <input type="date" value={customEnd} onChange={(e) => setCustomEnd(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#3F9AAE]" />
+            )}
+          </div>
+
+          {/* Divider */}
+          {categories.length > 0 && <div className="border-t-2 border-[#FFFDE1] mx-5" />}
+
+          {/* Category */}
+          {categories.length > 0 && (
+            <div className="px-5 py-4">
+              <div className="flex items-center gap-3">
+              <p className="text-sm font-bold text-[#3F9AAE] shrink-0">Category</p>
+              <select
+                value={selectedCategory ?? ''}
+                onChange={(e) => setSelectedCategory(e.target.value || null)}
+                className="w-full rounded-full border border-[#3F9AAE] px-4 py-1.5 text-sm text-gray-700 bg-white outline-none focus:ring-2 focus:ring-[#3F9AAE]"
+              >
+                <option value="">All</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.name}>{cat.name}</option>
+                ))}
+              </select>
               </div>
             </div>
           )}
         </div>
 
-        {/* Category filter */}
-        {categories.length > 0 && (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-5 py-4 space-y-3">
-            <p className="text-sm font-medium text-gray-700">Category</p>
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setSelectedCategory(null)}
-                className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
-                  selectedCategory === null
-                    ? 'bg-[#3F9AAE] border-[#3F9AAE] text-white'
-                    : 'bg-white border-gray-300 text-gray-700 hover:border-[#3F9AAE] hover:text-[#3F9AAE]'
-                }`}
-              >
-                All
-              </button>
-              {categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(selectedCategory === cat.name ? null : cat.name)}
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
-                    selectedCategory === cat.name
-                      ? 'bg-[#3F9AAE] border-[#3F9AAE] text-white'
-                      : 'bg-white border-gray-300 text-gray-700 hover:border-[#3F9AAE] hover:text-[#3F9AAE]'
-                  }`}
-                >
-                  {cat.name}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Summary section */}
         {!loading && (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-5 py-4 space-y-4">
-            {/* Income + Used */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* Current Balance + Used + Income */}
+            <div className="grid grid-cols-3 gap-4">
               <div>
-                <p className="text-xs text-gray-400 uppercase tracking-wide font-medium">Income</p>
-                <p className="text-lg font-bold text-[#3F9AAE] mt-1">{fmt(income)}</p>
+                <p className="text-xs text-gray-400 uppercase tracking-wide font-medium">Current Balance</p>
+                <p className={`text-lg font-bold mt-1 ${currentBalance < 0 ? 'text-[#FA6781]' : 'text-[#3F9AAE]'}`}>
+                  {currentBalance < 0 ? '-' : ''}{fmt(currentBalance)}
+                </p>
               </div>
               <div>
                 <p className="text-xs text-gray-400 uppercase tracking-wide font-medium">Used</p>
                 <p className="text-lg font-bold text-[#FA6781] mt-1">{fmt(used)}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-400 uppercase tracking-wide font-medium">Income</p>
+                <p className="text-lg font-bold text-[#3F9AAE] mt-1">{fmt(income)}</p>
               </div>
             </div>
 
