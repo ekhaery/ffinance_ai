@@ -30,6 +30,24 @@ type EditForm = {
   date: string
 }
 
+type RangeKey = 'today' | 'this_week' | 'this_month' | 'custom'
+const pad = (n: number) => String(n).padStart(2, '0')
+const ymd = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+function getRange(key: RangeKey, customStart: string, customEnd: string) {
+  const now = new Date()
+  if (key === 'today') { const t = ymd(now); return { start: t, end: t } }
+  if (key === 'this_week') {
+    const from = new Date(now); from.setDate(now.getDate() - 7)
+    return { start: ymd(from), end: ymd(now) }
+  }
+  if (key === 'this_month') {
+    const start = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-01`
+    const end = ymd(new Date(now.getFullYear(), now.getMonth() + 1, 0))
+    return { start, end }
+  }
+  return { start: customStart, end: customEnd }
+}
+
 function formatCardDate(dateStr: string) {
   // dateStr is YYYY-MM-DD; parse as local date to avoid timezone shift
   const [y, m, d] = dateStr.split('-').map(Number)
@@ -43,17 +61,28 @@ export default function ExpensesPage() {
   const [subcategories, setSubcategories] = useState<Subcategory[]>([])
   const [accounts, setAccounts] = useState<{ id: number; name: string }[]>([])
   const [loading, setLoading] = useState(true)
+  const [rangeKey, setRangeKey] = useState<'today' | 'this_week' | 'this_month' | 'custom'>('this_month')
+  const [customStart, setCustomStart] = useState('')
+  const [customEnd, setCustomEnd] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('')
   const [editTarget, setEditTarget] = useState<Expense | null>(null)
   const [editForm, setEditForm] = useState<EditForm | null>(null)
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState<number | null>(null)
-  async function load() {
-    const { data } = await supabase
+  async function load(rKey = rangeKey, cStart = customStart, cEnd = customEnd, cat = selectedCategory) {
+    setLoading(true)
+    const { start, end } = getRange(rKey, cStart, cEnd)
+    let query = supabase
       .from('expenses')
       .select('id, expense_name, amount, date, family_member, subcategory_id, account_id, balance_recorded, subcategories(name, categories(name)), accounts(name)')
       .order('date', { ascending: false })
       .order('id', { ascending: false })
-    setExpenses((data as unknown as Expense[]) ?? [])
+    if (start) query = query.gte('date', start)
+    if (end) query = query.lte('date', end)
+    const { data } = await query
+    let rows = (data as unknown as Expense[]) ?? []
+    if (cat) rows = rows.filter(e => e.subcategories?.categories?.name === cat)
+    setExpenses(rows)
     setLoading(false)
   }
 
@@ -167,6 +196,62 @@ export default function ExpensesPage() {
           </Link>
         </div>
 
+        {/* Filter card */}
+        <div className="mb-5 bg-[#F4B342] rounded-2xl shadow-sm overflow-hidden">
+          <div className="bg-[#121358] px-5 py-3">
+            <p className="text-base font-semibold text-white uppercase">All Accounts</p>
+          </div>
+          <div className="px-5 py-4 space-y-3">
+            <p className="text-sm font-bold text-[#121358]">Time Range</p>
+            <div className="flex flex-wrap gap-2">
+              {(['today', 'this_week', 'this_month', 'custom'] as const).map((key) => (
+                <button
+                  key={key}
+                  onClick={() => { setRangeKey(key); load(key, customStart, customEnd, selectedCategory) }}
+                  className={`px-2.5 py-1 rounded-full text-xs font-medium border transition-colors ${
+                    rangeKey === key
+                      ? 'bg-[#121358] border-[#121358] text-white'
+                      : 'bg-white border-gray-300 text-gray-700 hover:border-[#121358] hover:text-[#121358]'
+                  }`}
+                >
+                  {key === 'today' ? 'Today' : key === 'this_week' ? '7d ago' : key === 'this_month' ? 'This Month' : 'Custom'}
+                </button>
+              ))}
+            </div>
+            {rangeKey === 'custom' && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#FFFDE1] rounded-2xl p-3">
+                <div>
+                  <label className="block text-xs font-semibold text-[#121358] mb-1">Start Date</label>
+                  <input type="date" value={customStart} onChange={(e) => { setCustomStart(e.target.value); load(rangeKey, e.target.value, customEnd, selectedCategory) }}
+                    className="w-full rounded-full border border-[#121358] px-2 py-0.5 text-xs bg-white outline-none focus:ring-2 focus:ring-[#121358]" />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-[#121358] mb-1">End Date</label>
+                  <input type="date" value={customEnd} onChange={(e) => { setCustomEnd(e.target.value); load(rangeKey, customStart, e.target.value, selectedCategory) }}
+                    className="w-full rounded-full border border-[#121358] px-2 py-0.5 text-xs bg-white outline-none focus:ring-2 focus:ring-[#121358]" />
+                </div>
+              </div>
+            )}
+          </div>
+          {categories.length > 0 && (
+            <>
+              <div className="border-t-2 border-white mx-5" />
+              <div className="px-5 py-4 flex items-center gap-3">
+                <p className="text-sm font-bold text-[#121358] shrink-0">Category</p>
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => { setSelectedCategory(e.target.value); load(rangeKey, customStart, customEnd, e.target.value) }}
+                  className="w-full rounded-full border border-[#121358] px-4 py-1.5 text-sm text-gray-700 bg-white outline-none focus:ring-2 focus:ring-[#121358]"
+                >
+                  <option value="">All</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.name}>{cat.name}</option>
+                  ))}
+                </select>
+              </div>
+            </>
+          )}
+        </div>
 
         {loading ? (
           <p className="text-sm text-gray-400">Loading…</p>

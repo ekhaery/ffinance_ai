@@ -32,9 +32,8 @@ function getRange(key: RangeKey, customStart: string, customEnd: string): { star
   const now = new Date()
   if (key === 'today') { const t = ymd(now); return { start: t, end: t } }
   if (key === 'this_week') {
-    const mon = new Date(now); mon.setDate(now.getDate() - ((now.getDay() + 6) % 7))
-    const sun = new Date(mon); sun.setDate(mon.getDate() + 6)
-    return { start: ymd(mon), end: ymd(sun) }
+    const from = new Date(now); from.setDate(now.getDate() - 7)
+    return { start: ymd(from), end: ymd(now) }
   }
   if (key === 'this_month') {
     const start = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-01`
@@ -181,7 +180,7 @@ export default function AccountDetailPage() {
 
   const rangeOptions: { key: RangeKey; label: string }[] = [
     { key: 'today',      label: 'Today' },
-    { key: 'this_week',  label: 'This Week' },
+    { key: 'this_week',  label: '7d ago' },
     { key: 'this_month', label: 'This Month' },
     { key: 'custom',     label: 'Custom' },
   ]
