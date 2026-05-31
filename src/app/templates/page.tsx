@@ -86,13 +86,13 @@ export default function TemplateListPage() {
                       </td>
                       <td className="px-5 py-4 text-right space-x-3">
                         <Link href={`/templates/${t.id}`} className="text-[#3F9AAE] hover:underline">View</Link>
-                        <Link href={`/templates/${t.id}/edit`} className="text-amber-600 hover:underline">Edit</Link>
+                        <Link href={`/templates/${t.id}/edit`} className="text-amber-600 hover:underline"><i className="fa-solid fa-pen"></i></Link>
                         <button
                           onClick={() => handleDelete(t.id)}
                           disabled={deleting === t.id}
                           className="text-[#FA6781] hover:underline disabled:opacity-40"
                         >
-                          {deleting === t.id ? '…' : 'Delete'}
+                          <i className={`fa-solid fa-trash ${deleting === t.id ? 'opacity-40' : ''}`}></i>
                         </button>
                       </td>
                     </tr>
@@ -125,9 +125,9 @@ export default function TemplateListPage() {
                   </div>
                   <div className="flex gap-3 mt-2 justify-end">
                     <Link href={`/templates/${t.id}`} className="text-sm font-medium text-[#3F9AAE]">View</Link>
-                    <Link href={`/templates/${t.id}/edit`} className="text-sm font-medium text-amber-600">Edit</Link>
+                    <Link href={`/templates/${t.id}/edit`} className="text-sm font-medium text-amber-600"><i className="fa-solid fa-pen"></i></Link>
                     <button onClick={() => handleDelete(t.id)} disabled={deleting === t.id} className="text-sm font-medium text-[#FA6781] disabled:opacity-40">
-                      {deleting === t.id ? '…' : 'Delete'}
+                      <i className={`fa-solid fa-trash ${deleting === t.id ? 'opacity-40' : ''}`}></i>
                     </button>
                   </div>
                 </div>

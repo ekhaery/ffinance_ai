@@ -167,13 +167,13 @@ export default function AccountsPage() {
                         </td>
                         <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">{a.description ?? <span className="text-gray-300">—</span>}</td>
                         <td className="px-4 py-3 text-right whitespace-nowrap space-x-3">
-                          <button onClick={() => startEdit(a)} className="text-sm font-medium text-amber-600 hover:underline">Edit</button>
+                          <button onClick={() => startEdit(a)} className="text-sm font-medium text-amber-600 hover:underline"><i className="fa-solid fa-pen"></i></button>
                           <button
                             onClick={() => handleDelete(a.id)}
                             disabled={deleting === a.id}
                             className="text-sm font-medium text-[#FA6781] hover:underline disabled:opacity-40"
                           >
-                            {deleting === a.id ? '…' : 'Delete'}
+                            <i className={`fa-solid fa-trash ${deleting === a.id ? 'opacity-40' : ''}`}></i>
                           </button>
                         </td>
                       </>

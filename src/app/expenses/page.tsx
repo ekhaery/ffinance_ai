@@ -231,7 +231,7 @@ export default function ExpensesPage() {
                             title="Edit"
                             className="text-amber-500 hover:text-amber-600 transition-colors"
                           >
-                            <i className="fa-solid fa-pen-to-square text-sm" />
+                            <i className="fa-solid fa-pen" />
                           </button>
                           <button
                             onClick={() => handleDelete(e.id)}

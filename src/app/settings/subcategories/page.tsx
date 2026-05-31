@@ -174,9 +174,9 @@ export default function SubcategoriesPage() {
                         </>
                       ) : (
                         <>
-                          <button onClick={() => startEdit(sub)} className="text-amber-600 hover:underline">Edit</button>
+                          <button onClick={() => startEdit(sub)} className="text-amber-600 hover:underline"><i className="fa-solid fa-pen"></i></button>
                           <button onClick={() => handleDelete(sub.id)} disabled={deleting === sub.id} className="text-[#FA6781] hover:underline disabled:opacity-40">
-                            {deleting === sub.id ? '…' : 'Delete'}
+                            <i className={`fa-solid fa-trash ${deleting === sub.id ? 'opacity-40' : ''}`}></i>
                           </button>
                         </>
                       )}

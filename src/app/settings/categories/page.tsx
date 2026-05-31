@@ -130,9 +130,9 @@ export default function CategoriesPage() {
                         </>
                       ) : (
                         <>
-                          <button onClick={() => startEdit(cat)} className="text-amber-600 hover:underline">Edit</button>
+                          <button onClick={() => startEdit(cat)} className="text-amber-600 hover:underline"><i className="fa-solid fa-pen"></i></button>
                           <button onClick={() => handleDelete(cat.id)} disabled={deleting === cat.id} className="text-[#FA6781] hover:underline disabled:opacity-40">
-                            {deleting === cat.id ? '…' : 'Delete'}
+                            <i className={`fa-solid fa-trash ${deleting === cat.id ? 'opacity-40' : ''}`}></i>
                           </button>
                         </>
                       )}
