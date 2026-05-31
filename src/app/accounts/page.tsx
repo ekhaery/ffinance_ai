@@ -121,34 +121,38 @@ export default function BalancePage() {
           </div>
         ) : (
           <div className="space-y-2">
-            {accounts.map((a) => {
+            {accounts.map((a, idx) => {
               const bal = balanceMap[a.id] ?? 0
               const catTotals = spendingMap[a.id] ?? {}
               const monthIncome = incomeMap[a.id] ?? 0
               const transferOut = transferOutMap[a.id] ?? 0
+              const isAmberHeader = idx % 2 === 1
 
               return (
                 <div
                   key={a.id}
                   onClick={() => router.push(`/accounts/${a.id}`)}
-                  className="bg-white rounded-2xl border border-gray-100 border-t-4 border-t-[#FFC94D] shadow-sm px-4 py-3 cursor-pointer hover:shadow-md hover:border-gray-200 transition-all"
+                  className={`bg-white rounded-2xl border-2 ${isAmberHeader ? 'border-[#F4B342]' : 'border-[#121358]'} border-t-4 border-t-gray-300 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-all`}
                 >
-                  {/* Account name + balance */}
-                  <div className="flex items-start justify-between">
+                  {/* Card header — alternates dark navy / amber */}
+                  <div className={`${isAmberHeader ? 'bg-[#F4B342]' : 'bg-[#121358]'} px-4 py-3 flex items-start justify-between`}>
                     <div>
-                      <p className="text-base font-semibold text-gray-900 uppercase">{a.name}</p>
+                      <p className={`text-base font-semibold uppercase ${isAmberHeader ? 'text-[#121358]' : 'text-white'}`}>{a.name}</p>
                       {a.description && (
-                        <p className="text-xs text-gray-400 lowercase tracking-wide"><span className="font-bold">|</span> {a.description}</p>
+                        <p className={`text-xs lowercase tracking-wide ${isAmberHeader ? 'text-[#121358]/70' : 'text-white/60'}`}><span className="font-bold">|</span> {a.description}</p>
                       )}
                     </div>
                     <button
                       onClick={(e) => toggleHide(e, a.id)}
-                      className="text-gray-400 hover:text-gray-600 transition-colors mt-0.5 ml-2 shrink-0"
+                      className={`transition-colors mt-0.5 ml-2 shrink-0 ${isAmberHeader ? 'text-[#121358]/60 hover:text-[#121358]' : 'text-white/60 hover:text-white'}`}
                     >
                       <i className={`fa-solid ${isHidden(a.id) ? 'fa-eye-slash' : 'fa-eye'} text-xs`} />
                     </button>
                   </div>
-                  <p className={`text-base font-bold mt-2 ${bal < 0 ? 'text-[#FA6781]' : 'text-[#121358]'}`}>
+
+                  {/* Balance + categories */}
+                  <div className="px-4 py-3 bg-gray-50">
+                  <p className={`text-base font-bold ${bal < 0 ? 'text-[#FA6781]' : 'text-[#121358]'}`}>
                     {isHidden(a.id) ? '****' : `${bal < 0 ? '-' : ''}${Math.abs(bal).toLocaleString('id-ID')}`}
                   </p>
 
@@ -171,6 +175,7 @@ export default function BalancePage() {
                         {monthIncome > 0 ? Math.round((transferOut / monthIncome) * 100) : 0}%
                       </span>
                     </div>
+                  </div>
                   </div>
                 </div>
               )

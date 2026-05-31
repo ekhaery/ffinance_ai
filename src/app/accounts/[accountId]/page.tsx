@@ -177,7 +177,13 @@ export default function AccountDetailPage() {
 
         {/* Time range filter */}
         {/* Time Range + Category — single card */}
-        <div className="bg-[#F4B342] rounded-2xl border border-[#F4B342] shadow-sm overflow-hidden">
+        <div className="bg-[#F4B342] rounded-2xl shadow-sm overflow-hidden">
+          {/* Card header */}
+          <div className="bg-[#121358] px-5 py-3">
+            <p className="text-base font-semibold text-white uppercase">{account?.name ?? '…'}</p>
+            {account?.description && <p className="text-xs text-white/60 lowercase"><span className="font-bold">|</span> {account.description}</p>}
+          </div>
+
           {/* Time Range */}
           <div className="px-5 py-4 space-y-3">
             <p className="text-sm font-bold text-[#121358]">Time Range</p>
@@ -197,7 +203,7 @@ export default function AccountDetailPage() {
               ))}
             </div>
             {rangeKey === 'custom' && (
-              <div className="grid grid-cols-2 gap-3 pt-1 bg-[#FFFDE1] rounded-2xl p-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 bg-[#FFFDE1] rounded-2xl p-3">
                 <div>
                   <label className="block text-xs font-semibold text-[#121358] mb-1">Start Date</label>
                   <input type="date" value={customStart} onChange={(e) => setCustomStart(e.target.value)}
@@ -263,20 +269,21 @@ export default function AccountDetailPage() {
             </div>
 
             {/* Right card: Category % */}
-            <div className="col-span-3 bg-[#F4B342] rounded-2xl shadow-sm px-4 py-4 space-y-2">
+            <div className="col-span-3 bg-gray-200 rounded-2xl shadow-sm px-4 py-4 space-y-2">
               {categories.map((cat) => {
-                const pct = income > 0 ? Math.round(((catTotals[cat.name] ?? 0) / income) * 100) : 0
+                const amount = catTotals[cat.name] ?? 0
+                const pct = income > 0 ? Math.round((amount / income) * 100) : 0
                 return (
-                  <div key={cat.id} className="flex items-center justify-between">
-                    <span className="text-xs text-[#121358] truncate mr-1">{cat.name}</span>
-                    <span className="text-xs font-bold text-[#121358] shrink-0">{pct}%</span>
+                  <div key={cat.id} className="flex items-center justify-between gap-2">
+                    <span className="text-xs text-[#121358] truncate">{cat.name}</span>
+                    <span className="text-xs font-bold text-[#121358] shrink-0">{pct}% <span className="font-normal text-gray-500">| {amount.toLocaleString('id-ID')}</span></span>
                   </div>
                 )
               })}
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-[#121358] truncate mr-1">Other</span>
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-xs text-[#121358] truncate">Other</span>
                 <span className="text-xs font-bold text-[#121358] shrink-0">
-                  {income > 0 ? Math.round((transferOut / income) * 100) : 0}%
+                  {income > 0 ? Math.round((transferOut / income) * 100) : 0}% <span className="font-normal text-gray-500">| {transferOut.toLocaleString('id-ID')}</span>
                 </span>
               </div>
             </div>
