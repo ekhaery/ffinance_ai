@@ -106,10 +106,10 @@ export default function MonthlyCheckPage() {
 
   if (!template) {
     return (
-      <main className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <main className="min-h-screen bg-[#FFFDE1] flex items-center justify-center px-4">
         <div className="text-center">
           <p className="text-gray-500 text-sm">No default template set yet.</p>
-          <Link href="/templates" className="mt-3 inline-block text-sm text-blue-600 hover:underline">
+          <Link href="/templates" className="mt-3 inline-block text-sm text-[#3F9AAE] hover:underline">
             Go to Templates to mark one as default
           </Link>
         </div>
@@ -130,13 +130,13 @@ export default function MonthlyCheckPage() {
   }, {})
 
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-8 md:py-12">
+    <main className="min-h-screen bg-[#FFFDE1] px-4 py-8 md:py-12">
       <div className="max-w-3xl mx-auto">
 
         {/* Header */}
         <div className="flex items-start justify-between mb-5">
           <div>
-            <p className="text-xs font-medium uppercase tracking-widest text-blue-600 mb-1">Monthly Check</p>
+            <p className="text-xs font-medium uppercase tracking-widest text-[#3F9AAE] mb-1">Monthly Check</p>
             <h1 className="text-xl md:text-2xl font-semibold text-gray-900">{template.template_name}</h1>
           </div>
           {/* Edit button hidden for now */}
@@ -149,7 +149,7 @@ export default function MonthlyCheckPage() {
             type="month"
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(e.target.value)}
-            className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+            className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-[#3F9AAE] bg-white"
           />
           <span className="text-sm text-gray-500">{monthLabel(selectedMonth)}</span>
         </div>
@@ -158,7 +158,7 @@ export default function MonthlyCheckPage() {
         <div className="mb-5 flex items-center gap-3">
           <div className="flex-1 h-2 rounded-full bg-gray-200 overflow-hidden">
             <div
-              className="h-full bg-green-500 rounded-full transition-all duration-500"
+              className="h-full bg-[#3F9AAE] rounded-full transition-all duration-500"
               style={{ width: `${total > 0 ? (checkedTotal / total) * 100 : 0}%` }}
             />
           </div>
@@ -173,7 +173,7 @@ export default function MonthlyCheckPage() {
             const subtotal = rows.reduce((s, r) => s + Number(r.amount), 0)
             return (
               <div key={category} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-                <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 bg-gray-50">
+                <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 bg-[#FFFDE1]/50">
                   <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">{category}</span>
                   <span className="text-xs font-semibold text-gray-700">{subtotal.toLocaleString('id-ID')}</span>
                 </div>
@@ -185,20 +185,20 @@ export default function MonthlyCheckPage() {
                       return (
                         <tr
                           key={d.id}
-                          className={`border-b border-gray-50 transition-colors ${isChecked ? 'bg-green-50' : 'hover:bg-gray-50'}`}
+                          className={`border-b border-gray-50 transition-colors ${isChecked ? 'bg-[#3F9AAE]/10' : 'hover:bg-gray-50'}`}
                         >
                           <td className="px-5 py-3">
                             {d.name ? (
-                              <span className={isChecked ? 'text-green-700 line-through' : 'text-gray-700'}>
+                              <span className={isChecked ? 'text-[#3F9AAE] line-through' : 'text-gray-700'}>
                                 {d.name} <span className="font-normal opacity-60">· {d.subcategories?.name}</span>
                               </span>
                             ) : (
-                              <span className={isChecked ? 'text-green-700 line-through' : 'text-gray-700'}>
+                              <span className={isChecked ? 'text-[#3F9AAE] line-through' : 'text-gray-700'}>
                                 {d.subcategories?.name}
                               </span>
                             )}
                           </td>
-                          <td className={`px-5 py-3 text-right font-medium ${isChecked ? 'text-green-700' : 'text-gray-900'}`}>
+                          <td className={`px-5 py-3 text-right font-medium ${isChecked ? 'text-[#3F9AAE]' : 'text-gray-900'}`}>
                             {Number(d.amount).toLocaleString('id-ID')}
                           </td>
                           <td className="px-5 py-3 text-right w-12">
@@ -208,10 +208,10 @@ export default function MonthlyCheckPage() {
                               title={isChecked ? 'Already recorded' : 'Mark as done'}
                               className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ml-auto ${
                                 isChecked
-                                  ? 'border-green-500 bg-green-500 cursor-default'
+                                  ? 'border-[#3F9AAE] bg-[#3F9AAE] cursor-default'
                                   : isSaving
                                   ? 'border-gray-300 opacity-50'
-                                  : 'border-gray-300 hover:border-blue-400'
+                                  : 'border-gray-300 hover:border-[#3F9AAE]'
                               }`}
                             >
                               {isChecked && (
@@ -235,13 +235,13 @@ export default function MonthlyCheckPage() {
         {/* Totals */}
         <div className="mt-4 flex justify-end gap-3">
           {checked.size > 0 && (
-            <div className="rounded-xl bg-green-600 px-6 py-3 text-right">
-              <p className="text-xs text-green-200 mb-0.5">Posted</p>
+            <div className="rounded-xl bg-[#3F9AAE] px-6 py-3 text-right">
+              <p className="text-xs text-white/70 mb-0.5">Posted</p>
               <p className="text-lg font-bold text-white">{checkedTotal.toLocaleString('id-ID')}</p>
             </div>
           )}
-          <div className="rounded-xl bg-blue-600 px-6 py-3 text-right">
-            <p className="text-xs text-blue-200 mb-0.5">Total Budget</p>
+          <div className="rounded-xl bg-[#3F9AAE] px-6 py-3 text-right">
+            <p className="text-xs text-white/70 mb-0.5">Total Budget</p>
             <p className="text-lg font-bold text-white">{total.toLocaleString('id-ID')}</p>
           </div>
         </div>

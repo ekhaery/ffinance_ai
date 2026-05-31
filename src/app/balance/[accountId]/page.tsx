@@ -156,7 +156,7 @@ export default function AccountDetailPage() {
   ]
 
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-8">
+    <main className="min-h-screen bg-[#FFFDE1] px-4 py-8">
       <div className="max-w-3xl mx-auto space-y-5">
 
         {/* Back */}
@@ -172,7 +172,7 @@ export default function AccountDetailPage() {
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-5 py-4">
           <p className="text-lg font-semibold text-gray-900">{account?.name ?? '…'}</p>
           {account?.description && <p className="text-xs text-gray-400 mt-0.5">{account.description}</p>}
-          <p className={`text-2xl font-bold mt-2 ${currentBalance < 0 ? 'text-red-600' : 'text-green-700'}`}>
+          <p className={`text-2xl font-bold mt-2 ${currentBalance < 0 ? 'text-[#FA6781]' : 'text-[#3F9AAE]'}`}>
             {currentBalance < 0 ? '-' : ''}{fmt(currentBalance)}
           </p>
           <p className="text-xs text-gray-400 mt-0.5">Current balance</p>
@@ -188,8 +188,8 @@ export default function AccountDetailPage() {
                 onClick={() => setRangeKey(o.key)}
                 className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
                   rangeKey === o.key
-                    ? 'bg-blue-600 border-blue-600 text-white'
-                    : 'bg-white border-gray-300 text-gray-700 hover:border-blue-400 hover:text-blue-600'
+                    ? 'bg-[#3F9AAE] border-[#3F9AAE] text-white'
+                    : 'bg-white border-gray-300 text-gray-700 hover:border-[#3F9AAE] hover:text-[#3F9AAE]'
                 }`}
               >
                 {o.label}
@@ -201,12 +201,12 @@ export default function AccountDetailPage() {
               <div>
                 <label className="block text-xs text-gray-500 mb-1">Start Date</label>
                 <input type="date" value={customStart} onChange={(e) => setCustomStart(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#3F9AAE]" />
               </div>
               <div>
                 <label className="block text-xs text-gray-500 mb-1">End Date</label>
                 <input type="date" value={customEnd} onChange={(e) => setCustomEnd(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#3F9AAE]" />
               </div>
             </div>
           )}
@@ -221,8 +221,8 @@ export default function AccountDetailPage() {
                 onClick={() => setSelectedCategory(null)}
                 className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
                   selectedCategory === null
-                    ? 'bg-blue-600 border-blue-600 text-white'
-                    : 'bg-white border-gray-300 text-gray-700 hover:border-blue-400 hover:text-blue-600'
+                    ? 'bg-[#3F9AAE] border-[#3F9AAE] text-white'
+                    : 'bg-white border-gray-300 text-gray-700 hover:border-[#3F9AAE] hover:text-[#3F9AAE]'
                 }`}
               >
                 All
@@ -233,8 +233,8 @@ export default function AccountDetailPage() {
                   onClick={() => setSelectedCategory(selectedCategory === cat.name ? null : cat.name)}
                   className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
                     selectedCategory === cat.name
-                      ? 'bg-blue-600 border-blue-600 text-white'
-                      : 'bg-white border-gray-300 text-gray-700 hover:border-blue-400 hover:text-blue-600'
+                      ? 'bg-[#3F9AAE] border-[#3F9AAE] text-white'
+                      : 'bg-white border-gray-300 text-gray-700 hover:border-[#3F9AAE] hover:text-[#3F9AAE]'
                   }`}
                 >
                   {cat.name}
@@ -251,11 +251,11 @@ export default function AccountDetailPage() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-xs text-gray-400 uppercase tracking-wide font-medium">Income</p>
-                <p className="text-lg font-bold text-green-700 mt-1">{fmt(income)}</p>
+                <p className="text-lg font-bold text-[#3F9AAE] mt-1">{fmt(income)}</p>
               </div>
               <div>
                 <p className="text-xs text-gray-400 uppercase tracking-wide font-medium">Used</p>
-                <p className="text-lg font-bold text-red-500 mt-1">{fmt(used)}</p>
+                <p className="text-lg font-bold text-[#FA6781] mt-1">{fmt(used)}</p>
               </div>
             </div>
 
@@ -295,7 +295,7 @@ export default function AccountDetailPage() {
           </div>
         ) : (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            <div className="px-5 py-3 border-b border-gray-100 bg-gray-50">
+            <div className="px-5 py-3 border-b border-gray-100 bg-[#FFFDE1]/50">
               <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">
                 {displayRecords.length} transaction{displayRecords.length !== 1 ? 's' : ''}
               </span>
@@ -304,7 +304,7 @@ export default function AccountDetailPage() {
             {/* Desktop table */}
             <div className="hidden sm:block overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="border-b border-gray-100 text-xs uppercase text-gray-400 bg-gray-50">
+                <thead className="border-b border-gray-100 text-xs uppercase text-gray-400 bg-[#FFFDE1]/50">
                   <tr>
                     <th className="px-5 py-2.5 text-left font-medium">Date</th>
                     <th className="px-5 py-2.5 text-left font-medium">Type</th>
@@ -321,10 +321,10 @@ export default function AccountDetailPage() {
                         <td className="px-5 py-3 text-gray-500 whitespace-nowrap">{formatDate(r.date)}</td>
                         <td className="px-5 py-3 text-gray-700 whitespace-nowrap">{getTypeLabel(r.type)}</td>
                         <td className="px-5 py-3 text-gray-800 max-w-[180px] truncate">{getLabel(r)}</td>
-                        <td className={`px-5 py-3 text-right font-semibold whitespace-nowrap ${isNeg ? 'text-red-500' : 'text-green-600'}`}>
+                        <td className={`px-5 py-3 text-right font-semibold whitespace-nowrap ${isNeg ? 'text-[#FA6781]' : 'text-[#3F9AAE]'}`}>
                           {isNeg ? '−' : '+'}{fmt(Number(r.amount))}
                         </td>
-                        <td className={`px-5 py-3 text-right whitespace-nowrap ${r.balanceAfter < 0 ? 'text-red-500' : 'text-gray-700'}`}>
+                        <td className={`px-5 py-3 text-right whitespace-nowrap ${r.balanceAfter < 0 ? 'text-[#FA6781]' : 'text-gray-700'}`}>
                           {r.balanceAfter < 0 ? '-' : ''}{fmt(r.balanceAfter)}
                         </td>
                       </tr>
@@ -342,7 +342,7 @@ export default function AccountDetailPage() {
                   <div key={r.id} className="px-5 py-3 space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-400">{formatDate(r.date)}</span>
-                      <span className={`text-sm font-semibold ${isNeg ? 'text-red-500' : 'text-green-600'}`}>
+                      <span className={`text-sm font-semibold ${isNeg ? 'text-[#FA6781]' : 'text-[#3F9AAE]'}`}>
                         {isNeg ? '−' : '+'}{fmt(Number(r.amount))}
                       </span>
                     </div>
@@ -351,7 +351,7 @@ export default function AccountDetailPage() {
                         <p className="text-sm font-medium text-gray-800">{getLabel(r)}</p>
                         <p className="text-xs text-gray-400">{getTypeLabel(r.type)}</p>
                       </div>
-                      <p className={`text-xs ${r.balanceAfter < 0 ? 'text-red-400' : 'text-gray-400'}`}>
+                      <p className={`text-xs ${r.balanceAfter < 0 ? 'text-[#FA6781]' : 'text-gray-400'}`}>
                         bal: {r.balanceAfter < 0 ? '-' : ''}{fmt(r.balanceAfter)}
                       </p>
                     </div>

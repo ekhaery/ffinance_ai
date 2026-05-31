@@ -75,7 +75,7 @@ export default function AccountsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-8 md:py-12">
+    <main className="min-h-screen bg-[#FFFDE1] px-4 py-8 md:py-12">
       <div className="max-w-xl mx-auto space-y-6">
         <h1 className="text-xl font-semibold text-gray-900">Accounts</h1>
 
@@ -89,21 +89,21 @@ export default function AccountsPage() {
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
                 placeholder="Account name *"
-                className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 ${errors.create ? 'border-red-400' : 'border-gray-300'}`}
+                className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#3F9AAE] ${errors.create ? 'border-[#FA6781]' : 'border-gray-300'}`}
               />
-              {errors.create && <p className="mt-1 text-xs text-red-500">{errors.create}</p>}
+              {errors.create && <p className="mt-1 text-xs text-[#FA6781]">{errors.create}</p>}
             </div>
             <textarea
               value={newDesc}
               onChange={(e) => setNewDesc(e.target.value)}
               placeholder="Description (optional)"
               rows={2}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#3F9AAE] resize-none"
             />
             <button
               type="submit"
               disabled={saving}
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+              className="rounded-lg bg-[#3F9AAE] px-4 py-2 text-sm font-medium text-white hover:bg-[#4a9d81] disabled:opacity-50 transition-colors"
             >
               {saving ? 'Saving…' : 'Add'}
             </button>
@@ -118,7 +118,7 @@ export default function AccountsPage() {
         ) : (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="border-b border-gray-100 bg-gray-50 text-xs uppercase text-gray-500">
+              <thead className="border-b border-gray-100 bg-[#FFFDE1]/50 text-xs uppercase text-gray-500">
                 <tr>
                   <th className="px-4 py-3 text-left">Account Name</th>
                   <th className="px-4 py-3 text-left hidden sm:table-cell">Description</th>
@@ -136,20 +136,20 @@ export default function AccountsPage() {
                               type="text"
                               value={editName}
                               onChange={(e) => setEditName(e.target.value)}
-                              className={`w-full rounded-lg border px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 ${errors.edit ? 'border-red-400' : 'border-gray-300'}`}
+                              className={`w-full rounded-lg border px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-[#3F9AAE] ${errors.edit ? 'border-[#FA6781]' : 'border-gray-300'}`}
                             />
-                            {errors.edit && <p className="text-xs text-red-500">{errors.edit}</p>}
+                            {errors.edit && <p className="text-xs text-[#FA6781]">{errors.edit}</p>}
                             <textarea
                               value={editDesc}
                               onChange={(e) => setEditDesc(e.target.value)}
                               rows={2}
                               placeholder="Description (optional)"
-                              className="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                              className="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-[#3F9AAE] resize-none"
                             />
                           </div>
                         </td>
                         <td className="px-4 py-2 text-right whitespace-nowrap align-top">
-                          <button onClick={() => handleUpdate(a.id)} disabled={saving} className="text-sm font-medium text-blue-600 hover:underline disabled:opacity-40 mr-3">
+                          <button onClick={() => handleUpdate(a.id)} disabled={saving} className="text-sm font-medium text-[#3F9AAE] hover:underline disabled:opacity-40 mr-3">
                             {saving ? '…' : 'Save'}
                           </button>
                           <button onClick={() => setEditId(null)} className="text-sm font-medium text-gray-500 hover:underline">
@@ -171,7 +171,7 @@ export default function AccountsPage() {
                           <button
                             onClick={() => handleDelete(a.id)}
                             disabled={deleting === a.id}
-                            className="text-sm font-medium text-red-500 hover:underline disabled:opacity-40"
+                            className="text-sm font-medium text-[#FA6781] hover:underline disabled:opacity-40"
                           >
                             {deleting === a.id ? '…' : 'Delete'}
                           </button>

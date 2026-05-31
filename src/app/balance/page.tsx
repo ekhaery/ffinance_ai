@@ -90,14 +90,14 @@ export default function BalancePage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-gray-50 px-4 py-8">
+      <main className="min-h-screen bg-[#FFFDE1] px-4 py-8">
         <p className="text-sm text-gray-400 text-center mt-16">Loading…</p>
       </main>
     )
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-8">
+    <main className="min-h-screen bg-[#FFFDE1] px-4 py-8">
       <div className="max-w-xl mx-auto">
         <h1 className="text-xl font-semibold text-gray-900 mb-6">Balance</h1>
 
@@ -117,14 +117,14 @@ export default function BalancePage() {
                 <div
                   key={a.id}
                   onClick={() => router.push(`/balance/${a.id}`)}
-                  className="bg-white rounded-2xl border border-gray-100 shadow-sm px-5 py-4 cursor-pointer hover:shadow-md hover:border-gray-200 transition-all"
+                  className="bg-white rounded-2xl border border-gray-100 border-t-4 border-t-[#FFC94D] shadow-sm px-5 py-4 cursor-pointer hover:shadow-md hover:border-gray-200 transition-all"
                 >
                   {/* Account name + balance */}
                   <p className="text-base font-semibold text-gray-900">{a.name}</p>
                   {a.description && (
                     <p className="text-sm text-gray-400 mt-0.5">{a.description}</p>
                   )}
-                  <p className={`text-2xl font-bold mt-3 ${bal < 0 ? 'text-red-600' : 'text-green-700'}`}>
+                  <p className={`text-2xl font-bold mt-3 ${bal < 0 ? 'text-[#FA6781]' : 'text-[#3F9AAE]'}`}>
                     {bal < 0 ? '-' : ''}{Math.abs(bal).toLocaleString('id-ID')}
                   </p>
 
