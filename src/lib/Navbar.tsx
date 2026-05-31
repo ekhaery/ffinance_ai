@@ -55,7 +55,7 @@ export default function Navbar() {
               <i className="fa-solid fa-gear" /> {chevron(settingOpen)}
             </button>
             {settingOpen && (
-              <div className="absolute left-0 top-full mt-1 w-44 bg-white rounded-lg border border-gray-200 shadow-lg py-1 z-50">
+              <div className="absolute right-0 top-full mt-1 w-44 bg-white rounded-lg border border-gray-200 shadow-lg py-1 z-50">
                 <Link href="/templates" onClick={() => setSettingOpen(false)} className={`block px-4 py-2 text-sm ${pathname.startsWith('/templates') ? 'text-[#121358] bg-[#121358]/10' : 'text-gray-700 hover:bg-gray-50'}`}>Templates</Link>
                 <Link href="/settings/categories" onClick={() => setSettingOpen(false)} className={`block px-4 py-2 text-sm ${pathname.startsWith('/settings/categories') ? 'text-[#121358] bg-[#121358]/10' : 'text-gray-700 hover:bg-gray-50'}`}>Category</Link>
                 <Link href="/settings/subcategories" onClick={() => setSettingOpen(false)} className={`block px-4 py-2 text-sm ${pathname.startsWith('/settings/subcategories') ? 'text-[#121358] bg-[#121358]/10' : 'text-gray-700 hover:bg-gray-50'}`}>Subcategory</Link>
