@@ -280,11 +280,6 @@ function TransferForm({ accounts, balances }: { accounts: Account[]; balances: R
             <button key={a.id} type="button" onClick={() => setFromId(fromId === a.id ? null : a.id)}
               className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${fromId === a.id ? 'bg-blue-600 border-blue-600 text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-blue-400 hover:text-blue-600'}`}>
               {a.name}
-              {localBalances[a.id] !== undefined && (
-                <span className={`ml-1.5 text-xs ${fromId === a.id ? 'text-blue-100' : 'text-gray-400'}`}>
-                  {(localBalances[a.id] ?? 0).toLocaleString('id-ID')}
-                </span>
-              )}
             </button>
           ))}
         </div>
