@@ -237,10 +237,10 @@ export default function AccountDetailPage() {
         {/* Summary section */}
         {!loading && (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-5 py-4 space-y-4">
-            {/* Current Balance + Used + Income */}
+            {/* Balance + Used + Income */}
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <p className="text-xs text-gray-400 uppercase tracking-wide font-medium">Current Balance</p>
+                <p className="text-xs text-gray-400 uppercase tracking-wide font-medium">Balance</p>
                 <p className={`text-lg font-bold mt-1 ${currentBalance < 0 ? 'text-[#FA6781]' : 'text-[#3F9AAE]'}`}>
                   {currentBalance < 0 ? '-' : ''}{fmt(currentBalance)}
                 </p>
