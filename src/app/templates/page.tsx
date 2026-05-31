@@ -33,7 +33,7 @@ export default function TemplateListPage() {
     t.template_details.reduce((sum, d) => sum + Number(d.amount), 0)
 
   return (
-    <main className="min-h-screen bg-[#FFFDE1] px-4 py-8 md:py-12">
+    <main className="min-h-screen bg-[#FFF5E5] px-4 py-8 md:py-12">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-xl md:text-2xl font-semibold text-gray-900">Templates</h1>
@@ -59,7 +59,7 @@ export default function TemplateListPage() {
             {/* Desktop table */}
             <div className="hidden md:block bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
               <table className="w-full text-sm">
-                <thead className="border-b border-gray-100 bg-[#FFFDE1]/50 text-xs uppercase text-gray-500">
+                <thead className="border-b border-gray-100 bg-[#FFF5E5]/50 text-xs uppercase text-gray-500">
                   <tr>
                     <th className="px-5 py-3 text-left">Template Name</th>
                     <th className="px-5 py-3 text-right">Total Budget</th>

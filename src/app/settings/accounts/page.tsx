@@ -75,7 +75,7 @@ export default function AccountsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#FFFDE1] px-4 py-8 md:py-12">
+    <main className="min-h-screen bg-[#FFF5E5] px-4 py-8 md:py-12">
       <div className="max-w-xl mx-auto space-y-6">
         <h1 className="text-xl font-semibold text-gray-900">Accounts</h1>
 
@@ -118,7 +118,7 @@ export default function AccountsPage() {
         ) : (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="border-b border-gray-100 bg-[#FFFDE1]/50 text-xs uppercase text-gray-500">
+              <thead className="border-b border-gray-100 bg-[#FFF5E5]/50 text-xs uppercase text-gray-500">
                 <tr>
                   <th className="px-4 py-3 text-left">Account Name</th>
                   <th className="px-4 py-3 text-left hidden sm:table-cell">Description</th>

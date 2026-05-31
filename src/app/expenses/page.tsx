@@ -155,7 +155,7 @@ export default function ExpensesPage() {
   const sortedDates = Object.keys(grouped).sort((a, b) => b.localeCompare(a))
 
   return (
-    <main className="min-h-screen bg-[#FFFDE1] px-4 py-8">
+    <main className="min-h-screen bg-[#FFF5E5] px-4 py-8">
       <div className="max-w-3xl mx-auto">
 
         {/* Header */}
@@ -185,7 +185,7 @@ export default function ExpensesPage() {
               return (
                 <div key={date} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                   {/* Card header */}
-                  <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-[#FFFDE1]/50">
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-[#FFF5E5]/50">
                     <span className="text-sm font-semibold text-gray-700 capitalize">
                       {formatCardDate(date)}
                     </span>

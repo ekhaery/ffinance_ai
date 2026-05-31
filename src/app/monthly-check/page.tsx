@@ -106,7 +106,7 @@ export default function MonthlyCheckPage() {
 
   if (!template) {
     return (
-      <main className="min-h-screen bg-[#FFFDE1] flex items-center justify-center px-4">
+      <main className="min-h-screen bg-[#FFF5E5] flex items-center justify-center px-4">
         <div className="text-center">
           <p className="text-gray-500 text-sm">No default template set yet.</p>
           <Link href="/templates" className="mt-3 inline-block text-sm text-[#3F9AAE] hover:underline">
@@ -130,7 +130,7 @@ export default function MonthlyCheckPage() {
   }, {})
 
   return (
-    <main className="min-h-screen bg-[#FFFDE1] px-4 py-8 md:py-12">
+    <main className="min-h-screen bg-[#FFF5E5] px-4 py-8 md:py-12">
       <div className="max-w-3xl mx-auto">
 
         {/* Header */}
@@ -173,7 +173,7 @@ export default function MonthlyCheckPage() {
             const subtotal = rows.reduce((s, r) => s + Number(r.amount), 0)
             return (
               <div key={category} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-                <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 bg-[#FFFDE1]/50">
+                <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 bg-[#FFF5E5]/50">
                   <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">{category}</span>
                   <span className="text-xs font-semibold text-gray-700">{subtotal.toLocaleString('id-ID')}</span>
                 </div>

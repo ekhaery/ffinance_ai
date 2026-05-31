@@ -91,14 +91,14 @@ export default function BalancePage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#FFFDE1] px-4 py-8">
+      <main className="min-h-screen bg-[#FFF5E5] px-4 py-8">
         <p className="text-sm text-gray-400 text-center mt-16">Loading…</p>
       </main>
     )
   }
 
   return (
-    <main className="min-h-screen bg-[#FFFDE1] px-4 py-8">
+    <main className="min-h-screen bg-[#FFF5E5] px-4 py-8">
       <div className="max-w-xl mx-auto">
         <div className="mb-6">
           <h1 className="text-xl font-semibold text-gray-900">Balance</h1>

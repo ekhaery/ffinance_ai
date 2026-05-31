@@ -156,7 +156,7 @@ export default function AccountDetailPage() {
   ]
 
   return (
-    <main className="min-h-screen bg-[#FFFDE1] px-4 py-8">
+    <main className="min-h-screen bg-[#FFF5E5] px-4 py-8">
       <div className="max-w-3xl mx-auto space-y-5">
 
         {/* Back + account name */}
@@ -196,7 +196,7 @@ export default function AccountDetailPage() {
               ))}
             </div>
             {rangeKey === 'custom' && (
-              <div className="grid grid-cols-2 gap-3 pt-1 bg-[#FFFDE1] rounded-2xl p-3">
+              <div className="grid grid-cols-2 gap-3 pt-1 bg-[#FFF5E5] rounded-2xl p-3">
                 <div>
                   <label className="block text-xs font-semibold text-[#3F9AAE] mb-1">Start Date</label>
                   <input type="date" value={customStart} onChange={(e) => setCustomStart(e.target.value)}
@@ -212,7 +212,7 @@ export default function AccountDetailPage() {
           </div>
 
           {/* Divider */}
-          {categories.length > 0 && <div className="border-t-2 border-[#FFFDE1] mx-5" />}
+          {categories.length > 0 && <div className="border-t-2 border-[#FFF5E5] mx-5" />}
 
           {/* Category */}
           {categories.length > 0 && (
@@ -291,7 +291,7 @@ export default function AccountDetailPage() {
           </div>
         ) : (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            <div className="px-5 py-3 border-b border-gray-100 bg-[#FFFDE1]/50">
+            <div className="px-5 py-3 border-b border-gray-100 bg-[#FFF5E5]/50">
               <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">
                 {displayRecords.length} transaction{displayRecords.length !== 1 ? 's' : ''}
               </span>
@@ -300,7 +300,7 @@ export default function AccountDetailPage() {
             {/* Desktop table */}
             <div className="hidden sm:block overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="border-b border-gray-100 text-xs uppercase text-gray-400 bg-[#FFFDE1]/50">
+                <thead className="border-b border-gray-100 text-xs uppercase text-gray-400 bg-[#FFF5E5]/50">
                   <tr>
                     <th className="px-5 py-2.5 text-left font-medium">Date</th>
                     <th className="px-5 py-2.5 text-left font-medium">Type</th>

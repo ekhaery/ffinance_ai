@@ -335,7 +335,7 @@ export default function OutflowPage() {
   ]
 
   return (
-    <main className="min-h-screen bg-[#FFFDE1] flex items-start justify-center pt-12 px-4 pb-16">
+    <main className="min-h-screen bg-[#FFF5E5] flex items-start justify-center pt-12 px-4 pb-16">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           {/* Tabs */}

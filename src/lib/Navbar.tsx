@@ -29,13 +29,13 @@ export default function Navbar() {
 
   const linkClass = (path: string) =>
     `px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-      isActive(path) ? 'bg-white/20 text-[#FFFDE1]' : 'text-[#FFFDE1]/90 hover:bg-white/10 hover:text-[#FFFDE1]'
+      isActive(path) ? 'bg-white/20 text-[#FFF5E5]' : 'text-[#FFF5E5]/90 hover:bg-white/10 hover:text-[#FFF5E5]'
     }`
 
   return (
     <nav className="bg-[#F96E5B] border-b border-[#F96E5B]">
       <div className="max-w-4xl mx-auto px-4 flex items-center h-14 gap-1">
-        <Link href="/outflow" className="font-bold text-[#FFFDE1] mr-4 text-lg tracking-tight hover:opacity-75 transition-opacity">FinFadel</Link>
+        <Link href="/outflow" className="font-bold text-[#FFF5E5] mr-4 text-lg tracking-tight hover:opacity-75 transition-opacity">FinFadel</Link>
 
         {/* Links — always visible */}
         <div className="flex items-center gap-1 flex-1">
@@ -47,8 +47,8 @@ export default function Navbar() {
               onClick={() => setSettingOpen((o) => !o)}
               className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                 pathname.startsWith('/settings') || pathname.startsWith('/templates')
-                  ? 'bg-white/20 text-[#FFFDE1]'
-                  : 'text-[#FFFDE1]/90 hover:bg-white/10 hover:text-[#FFFDE1]'
+                  ? 'bg-white/20 text-[#FFF5E5]'
+                  : 'text-[#FFF5E5]/90 hover:bg-white/10 hover:text-[#FFF5E5]'
               }`}
             >
               <i className="fa-solid fa-gear" /> {chevron(settingOpen)}

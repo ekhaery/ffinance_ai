@@ -75,7 +75,7 @@ export default function SubcategoriesPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#FFFDE1] px-4 py-12">
+    <main className="min-h-screen bg-[#FFF5E5] px-4 py-12">
       <div className="max-w-2xl mx-auto space-y-6">
         <h1 className="text-2xl font-semibold text-gray-900">Subcategories</h1>
 
@@ -120,7 +120,7 @@ export default function SubcategoriesPage() {
             <p className="px-6 py-8 text-sm text-center text-gray-400">No subcategories yet.</p>
           ) : (
             <table className="w-full text-sm">
-              <thead className="border-b border-gray-100 bg-[#FFFDE1]/50 text-xs uppercase text-gray-500">
+              <thead className="border-b border-gray-100 bg-[#FFF5E5]/50 text-xs uppercase text-gray-500">
                 <tr>
                   <th className="px-5 py-3 text-left w-10">#</th>
                   <th className="px-5 py-3 text-left">Category</th>

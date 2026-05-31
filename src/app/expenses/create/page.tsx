@@ -161,7 +161,7 @@ export default function CreateExpensePage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#FFFDE1] flex items-start justify-center pt-16 px-4">
+    <main className="min-h-screen bg-[#FFF5E5] flex items-start justify-center pt-16 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
         <h1 className="text-2xl font-semibold text-gray-900 mb-6">Create Expense</h1>
 
