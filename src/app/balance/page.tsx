@@ -5,44 +5,84 @@ import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
 type Account = { id: number; name: string; description: string | null }
-type BalanceRow = { account_id: number; amount: number }
-type RecentExpense = { id: number; expense_name: string; amount: number; date: string; account_id: number }
+type Category = { id: number; name: string }
+type BalanceRow = { account_id: number; amount: number; type: string }
+type ExpenseRow = {
+  account_id: number
+  amount: number
+  subcategories: { categories: { name: string } | null } | null
+}
+
+// account_id → category → total amount
+type SpendingMap = Record<number, Record<string, number>>
+
+function currentMonthRange() {
+  const now = new Date()
+  const y = now.getFullYear()
+  const m = String(now.getMonth() + 1).padStart(2, '0')
+  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
+  return { start: `${y}-${m}-01`, end: `${y}-${m}-${String(lastDay).padStart(2, '0')}` }
+}
 
 export default function BalancePage() {
   const router = useRouter()
   const [accounts, setAccounts] = useState<Account[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
   const [balanceMap, setBalanceMap] = useState<Record<number, number>>({})
-  const [expensesMap, setExpensesMap] = useState<Record<number, RecentExpense[]>>({})
+  const [incomeMap, setIncomeMap] = useState<Record<number, number>>({})
+  const [transferOutMap, setTransferOutMap] = useState<Record<number, number>>({})
+  const [spendingMap, setSpendingMap] = useState<SpendingMap>({})
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function load() {
-      const [{ data: accs }, { data: bals }, { data: exps }] = await Promise.all([
+      const { start, end } = currentMonthRange()
+
+      const [{ data: accs }, { data: cats }, { data: bals }, { data: monthBals }, { data: exps }] = await Promise.all([
         supabase.from('accounts').select('id, name, description').order('name'),
-        supabase.from('balance').select('account_id, amount'),
+        supabase.from('categories').select('id, name').order('name'),
+        supabase.from('balance').select('account_id, amount, type'),
+        supabase.from('balance').select('account_id, amount, type').gte('date', start).lte('date', end),
         supabase.from('expenses')
-          .select('id, expense_name, amount, date, account_id')
+          .select('account_id, amount, subcategories(categories(name))')
           .not('account_id', 'is', null)
-          .order('date', { ascending: false })
-          .order('id', { ascending: false }),
+          .gte('date', start)
+          .lte('date', end),
       ])
 
-      // Build balance map
+      // Overall balance map (all time)
       const bMap: Record<number, number> = {}
       ;(bals as BalanceRow[] ?? []).forEach((r) => {
         bMap[r.account_id] = (bMap[r.account_id] ?? 0) + Number(r.amount)
       })
-      setBalanceMap(bMap)
 
-      // Build recent expenses map (latest 10 per account)
-      const eMap: Record<number, RecentExpense[]> = {}
-      ;(exps as RecentExpense[] ?? []).forEach((e) => {
-        if (!eMap[e.account_id]) eMap[e.account_id] = []
-        if (eMap[e.account_id].length < 10) eMap[e.account_id].push(e)
+      // Income map: current month income + transfer_in per account
+      const iMap: Record<number, number> = {}
+      ;(monthBals as BalanceRow[] ?? []).filter(r => r.type === 'income' || r.type === 'transfer_in').forEach((r) => {
+        iMap[r.account_id] = (iMap[r.account_id] ?? 0) + Number(r.amount)
       })
-      setExpensesMap(eMap)
 
+      // Transfer out map: current month per account
+      const toMap: Record<number, number> = {}
+      ;(monthBals as BalanceRow[] ?? []).filter(r => r.type === 'transfer_out').forEach((r) => {
+        toMap[r.account_id] = (toMap[r.account_id] ?? 0) + Math.abs(Number(r.amount))
+      })
+
+      // Spending map: per account, per category
+      const sMap: SpendingMap = {}
+      ;(exps as unknown as ExpenseRow[] ?? []).forEach((e) => {
+        const cat = e.subcategories?.categories?.name
+        if (!cat) return
+        if (!sMap[e.account_id]) sMap[e.account_id] = {}
+        sMap[e.account_id][cat] = (sMap[e.account_id][cat] ?? 0) + Number(e.amount)
+      })
+
+      setBalanceMap(bMap)
+      setIncomeMap(iMap)
+      setTransferOutMap(toMap)
+      setSpendingMap(sMap)
       setAccounts(accs ?? [])
+      setCategories(cats ?? [])
       setLoading(false)
     }
     load()
@@ -58,80 +98,55 @@ export default function BalancePage() {
 
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-8">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-xl font-semibold text-gray-900 mb-4">Balance</h1>
-
-        {/* Account summary strip */}
-        {accounts.length > 0 && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
-            {accounts.map((a) => {
-              const bal = balanceMap[a.id] ?? 0
-              return (
-                <div key={a.id} className="bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3 flex flex-col justify-between min-h-[80px]">
-                  <p className="text-sm font-semibold text-gray-800 truncate">{a.name}</p>
-                  <p className={`text-base font-bold mt-2 ${bal < 0 ? 'text-red-600' : 'text-green-700'}`}>
-                    {bal < 0 ? '-' : ''}{Math.abs(bal).toLocaleString('id-ID')}
-                  </p>
-                </div>
-              )
-            })}
-          </div>
-        )}
+      <div className="max-w-xl mx-auto">
+        <h1 className="text-xl font-semibold text-gray-900 mb-6">Balance</h1>
 
         {accounts.length === 0 ? (
           <div className="rounded-xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center">
             <p className="text-gray-400 text-sm">No accounts yet.</p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {accounts.map((a) => {
-              const balance = balanceMap[a.id] ?? 0
-              const recentExpenses = expensesMap[a.id] ?? []
+              const bal = balanceMap[a.id] ?? 0
+              const catTotals = spendingMap[a.id] ?? {}
+              const monthIncome = incomeMap[a.id] ?? 0
+              const transferOut = transferOutMap[a.id] ?? 0
+
               return (
                 <div
                   key={a.id}
                   onClick={() => router.push(`/balance/${a.id}`)}
-                  className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md hover:border-gray-200 transition-all"
+                  className="bg-white rounded-2xl border border-gray-100 shadow-sm px-5 py-4 cursor-pointer hover:shadow-md hover:border-gray-200 transition-all"
                 >
-                  {/* Card header */}
-                  <div className="flex items-start justify-between px-5 py-4 border-b border-gray-100">
-                    <div>
-                      <p className="text-base font-semibold text-gray-900">{a.name}</p>
-                      {a.description && (
-                        <p className="text-xs text-gray-400 mt-0.5">{a.description}</p>
-                      )}
-                    </div>
-                    <div className="text-right">
-                      <p className={`text-lg font-bold ${balance < 0 ? 'text-red-600' : 'text-green-700'}`}>
-                        {balance < 0 ? '-' : ''}{Math.abs(balance).toLocaleString('id-ID')}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Recent expenses */}
-                  {recentExpenses.length === 0 ? (
-                    <div className="px-5 py-4">
-                      <p className="text-xs text-gray-400">No expense transactions yet.</p>
-                    </div>
-                  ) : (
-                    <div className="divide-y divide-gray-50">
-                      {recentExpenses.map((e) => (
-                        <div key={e.id} className="flex items-center justify-between px-5 py-2.5">
-                          <p className="text-sm text-gray-700 truncate mr-4">{e.expense_name}</p>
-                          <p className="text-sm font-medium text-gray-900 shrink-0">
-                            {Number(e.amount).toLocaleString('id-ID')}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
+                  {/* Account name + balance */}
+                  <p className="text-base font-semibold text-gray-900">{a.name}</p>
+                  {a.description && (
+                    <p className="text-sm text-gray-400 mt-0.5">{a.description}</p>
                   )}
+                  <p className={`text-2xl font-bold mt-3 ${bal < 0 ? 'text-red-600' : 'text-green-700'}`}>
+                    {bal < 0 ? '-' : ''}{Math.abs(bal).toLocaleString('id-ID')}
+                  </p>
 
-                  {/* Footer hint */}
-                  <div className="px-5 py-2.5 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
-                    <p className="text-xs text-gray-400">
-                      {recentExpenses.length > 0 ? `Latest ${recentExpenses.length} expense${recentExpenses.length > 1 ? 's' : ''}` : ''}
-                    </p>
-                    <p className="text-xs text-blue-500 font-medium">View all →</p>
+                  {/* Category spending percentages */}
+                  <div className="mt-4 pt-3 border-t border-gray-100 grid grid-cols-2 gap-x-4 gap-y-1.5">
+                    {categories.map((cat) => {
+                      const amount = catTotals[cat.name] ?? 0
+                      const pct = monthIncome > 0 ? Math.round((amount / monthIncome) * 100) : 0
+                      return (
+                        <div key={cat.id} className="flex items-center justify-between">
+                          <span className="text-xs text-gray-500 truncate mr-1">{cat.name}</span>
+                          <span className="text-xs font-semibold text-gray-700 shrink-0">{pct}%</span>
+                        </div>
+                      )
+                    })}
+                    {/* Other = Transfer Out */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-gray-500 truncate mr-1">Other</span>
+                      <span className="text-xs font-semibold text-gray-700 shrink-0">
+                        {monthIncome > 0 ? Math.round((transferOut / monthIncome) * 100) : 0}%
+                      </span>
+                    </div>
                   </div>
                 </div>
               )
