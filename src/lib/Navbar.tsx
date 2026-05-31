@@ -39,7 +39,6 @@ export default function Navbar() {
 
         {/* Links — always visible */}
         <div className="flex items-center gap-1 flex-1">
-          <Link href="/expenses" className={linkClass('/expenses')}>Expenses</Link>
           <Link href="/balance" className={linkClass('/balance')}>Balance</Link>
 
           {/* Setting dropdown */}

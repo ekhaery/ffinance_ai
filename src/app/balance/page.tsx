@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
@@ -99,7 +100,11 @@ export default function BalancePage() {
   return (
     <main className="min-h-screen bg-[#FFFDE1] px-4 py-8">
       <div className="max-w-xl mx-auto">
-        <h1 className="text-xl font-semibold text-gray-900 mb-6">Balance</h1>
+        <div className="mb-6">
+          <h1 className="text-xl font-semibold text-gray-900">Balance</h1>
+          <Link href="/expenses" className="inline-flex items-center gap-1.5 mr-2 mt-1.5 px-3 py-1 rounded-full border border-[#3F9AAE] bg-[#3F9AAE] text-white text-xs font-semibold hover:bg-[#79C9C5] hover:border-[#79C9C5] transition-colors">All History</Link>
+          <Link href="/monthly-check" className="inline-flex items-center gap-1.5 mt-1.5 px-3 py-1 rounded-full border border-[#3F9AAE] bg-[#3F9AAE] text-white text-xs font-semibold hover:bg-[#79C9C5] hover:border-[#79C9C5] transition-colors">Monthly Checklist</Link>
+        </div>
 
         {accounts.length === 0 ? (
           <div className="rounded-xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center">

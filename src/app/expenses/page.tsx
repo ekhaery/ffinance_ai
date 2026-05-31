@@ -161,7 +161,6 @@ export default function ExpensesPage() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-xl font-semibold text-gray-900">Expenses</h1>
-            <Link href="/monthly-check" className="inline-flex items-center gap-1.5 mt-1.5 px-3 py-1 rounded-full border border-[#3F9AAE] bg-[#3F9AAE] text-white text-xs font-semibold hover:bg-[#79C9C5] hover:border-[#79C9C5] transition-colors">Monthly Checklist</Link>
           </div>
           {!loading && expenses.length > 0 && (
             <span className="text-xs text-gray-500 text-right leading-snug">
