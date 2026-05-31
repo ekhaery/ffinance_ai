@@ -115,7 +115,7 @@ export default function TemplateForm({ initialName = '', initialRows, initialIsU
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g. Monthly Budget"
-          className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 ${errors.name ? 'border-red-400' : 'border-gray-300'}`}
+          className={`w-full rounded-2xl border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#F4B342] ${errors.name ? 'border-red-400' : 'border-[#F4B342]'}`}
         />
         {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
       </div>
@@ -137,26 +137,16 @@ export default function TemplateForm({ initialName = '', initialRows, initialIsU
 
         {/* Column headers — desktop only */}
         <div className="hidden md:grid grid-cols-[1fr_1fr_1fr_1fr_auto] gap-2 mb-1 px-0.5">
-          <span className="text-xs text-gray-400 uppercase tracking-wide">Name</span>
-          <span className="text-xs text-gray-400 uppercase tracking-wide">Category</span>
-          <span className="text-xs text-gray-400 uppercase tracking-wide">Subcategory</span>
-          <span className="text-xs text-gray-400 uppercase tracking-wide">Amount</span>
+          <span className="text-xs text-gray-500 font-semibold">Name</span>
+          <span className="text-xs text-gray-500 font-semibold">Category</span>
+          <span className="text-xs text-gray-500 font-semibold">Subcategory</span>
+          <span className="text-xs text-gray-500 font-semibold">Amount</span>
           <span />
         </div>
 
         <div className="space-y-4">
           {rows.map((row, i) => (
             <div key={i} className="relative bg-gray-50 md:bg-transparent rounded-xl md:rounded-none p-3 md:p-0 border border-gray-100 md:border-0 md:grid md:grid-cols-[1fr_1fr_1fr_1fr_auto] gap-2 items-start">
-              {/* Remove button — top-right on mobile */}
-              <button
-                type="button"
-                onClick={() => setRows((r) => r.filter((_, idx) => idx !== i))}
-                className="absolute top-2 right-2 md:static md:mt-1.5 text-gray-400 hover:text-red-500 text-lg leading-none"
-                title="Remove row"
-              >
-                ×
-              </button>
-
               {/* Mobile: 2-col grid for fields */}
               <div className="grid grid-cols-2 gap-2 md:contents">
                 {/* Name */}
@@ -167,7 +157,7 @@ export default function TemplateForm({ initialName = '', initialRows, initialIsU
                     value={row.name}
                     onChange={(e) => updateRow(i, { name: e.target.value })}
                     placeholder="e.g. Home loan"
-                    className="w-full rounded-lg border border-gray-300 px-2 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                    className="w-full rounded-2xl border border-[#F4B342] px-2 py-2 text-sm outline-none focus:ring-2 focus:ring-[#F4B342] bg-white"
                   />
                 </div>
 
@@ -177,7 +167,7 @@ export default function TemplateForm({ initialName = '', initialRows, initialIsU
                   <select
                     value={row.category_id || ''}
                     onChange={(e) => updateRow(i, { category_id: Number(e.target.value) })}
-                    className={`w-full rounded-lg border px-2 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500 ${errors[`cat_${i}`] ? 'border-red-400' : 'border-gray-300'}`}
+                    className={`w-full rounded-2xl border px-2 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-[#F4B342] ${errors[`cat_${i}`] ? 'border-red-400' : 'border-[#F4B342]'}`}
                   >
                     <option value="">Select</option>
                     {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -192,7 +182,7 @@ export default function TemplateForm({ initialName = '', initialRows, initialIsU
                     value={row.subcategory_id || ''}
                     onChange={(e) => updateRow(i, { subcategory_id: Number(e.target.value) })}
                     disabled={!row.category_id}
-                    className={`w-full rounded-lg border px-2 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-400 ${errors[`sub_${i}`] ? 'border-red-400' : 'border-gray-300'}`}
+                    className={`w-full rounded-2xl border px-2 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-[#F4B342] disabled:bg-gray-50 disabled:text-gray-400 ${errors[`sub_${i}`] ? 'border-red-400' : 'border-[#F4B342]'}`}
                   >
                     <option value="">Select</option>
                     {subcategoriesFor(row.category_id).map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
@@ -209,11 +199,21 @@ export default function TemplateForm({ initialName = '', initialRows, initialIsU
                     value={row.amount}
                     onChange={(e) => updateRow(i, { amount: e.target.value })}
                     placeholder="0"
-                    className={`w-full rounded-lg border px-2 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white ${errors[`amt_${i}`] ? 'border-red-400' : 'border-gray-300'}`}
+                    className={`w-full rounded-2xl border px-2 py-2 text-sm outline-none focus:ring-2 focus:ring-[#F4B342] bg-white ${errors[`amt_${i}`] ? 'border-red-400' : 'border-[#F4B342]'}`}
                   />
                   {errors[`amt_${i}`] && <p className="mt-0.5 text-xs text-red-500">{errors[`amt_${i}`]}</p>}
                 </div>
               </div>
+
+              {/* Remove button — top-right on mobile, last col on desktop */}
+              <button
+                type="button"
+                onClick={() => setRows((r) => r.filter((_, idx) => idx !== i))}
+                className="absolute top-2 right-2 md:static md:mt-1.5 text-red-400 hover:text-red-600 text-lg leading-none"
+                title="Remove row"
+              >
+                ×
+              </button>
             </div>
           ))}
         </div>
@@ -230,15 +230,15 @@ export default function TemplateForm({ initialName = '', initialRows, initialIsU
       )}
 
       {/* Default toggle */}
-      <div className="flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
+      <div className="flex items-center justify-between rounded-xl border border-[#F4B342] bg-[#F4B342] px-4 py-3">
         <div>
-          <p className="text-sm font-medium text-gray-800">Mark as my go-to budget plan</p>
-          <p className="text-xs text-gray-500 mt-0.5">This template will be used as your active budget plan</p>
+          <p className="text-sm font-bold text-gray-900">Mark as my go-to budget plan</p>
+          <p className="text-xs text-[#121358] mt-0.5">This template will be used as your active budget plan</p>
         </div>
         <button
           type="button"
           onClick={() => setIsUsed((v) => !v)}
-          className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${isUsed ? 'bg-blue-600' : 'bg-gray-300'}`}
+          className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${isUsed ? 'bg-[#121358]' : 'bg-gray-300'}`}
           role="switch"
           aria-checked={isUsed}
         >
@@ -250,7 +250,7 @@ export default function TemplateForm({ initialName = '', initialRows, initialIsU
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+          className="rounded-lg bg-[#121358] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#6668a8] disabled:opacity-50 transition-colors"
         >
           {submitting ? 'Saving…' : 'Save Template'}
         </button>
