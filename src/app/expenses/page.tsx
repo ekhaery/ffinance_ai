@@ -237,7 +237,7 @@ export default function ExpensesPage() {
             {/* Left / Right panels */}
             <div className="grid grid-cols-[2fr_3fr] divide-x divide-gray-100">
               {/* Left: category percentages */}
-              <div className="px-4 py-3 space-y-2">
+              <div className="px-4 py-3 space-y-2 bg-gray-50">
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">By Category</p>
                 {categoryTotals.map((cat) => (
                   <div key={cat.id}>
@@ -245,7 +245,7 @@ export default function ExpensesPage() {
                       <span className="text-xs font-medium" style={{ color: cat.color ?? '#6668a8' }}>{cat.name}</span>
                       <span className="text-xs font-semibold text-gray-700">{cat.pct}%</span>
                     </div>
-                    <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
+                    <div className="h-1.5 rounded-full bg-gray-300 overflow-hidden">
                       <div className="h-full rounded-full" style={{ width: `${cat.pct}%`, backgroundColor: cat.color ?? '#6668a8' }} />
                     </div>
                   </div>
@@ -253,14 +253,14 @@ export default function ExpensesPage() {
               </div>
 
               {/* Right: top expense per category */}
-              <div className="px-4 py-3 space-y-2">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Top per Category</p>
-                {categoryTotals.map((cat) => (
+              <div className="py-3">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 px-4">Top per Category</p>
+                {categoryTotals.map((cat, idx) => (
                   cat.top ? (
-                    <div key={cat.id} className="flex items-start justify-between gap-2">
+                    <div key={cat.id} className={`flex items-start justify-between gap-2 px-4 py-2 ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-100/60'}`}>
                       <div className="min-w-0">
-                        <p className="text-xs font-medium truncate" style={{ color: cat.color ?? '#6668a8' }}>{cat.name}</p>
                         <p className="text-xs text-gray-700 truncate">{cat.top.expense_name}</p>
+                        <p className="text-xs font-bold truncate" style={{ color: cat.color ?? '#6668a8' }}>{cat.name}</p>
                       </div>
                       <span className="text-xs font-semibold text-gray-900 shrink-0">{Number(cat.top.amount).toLocaleString('id-ID')}</span>
                     </div>
