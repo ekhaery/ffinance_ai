@@ -133,6 +133,17 @@ export default function MonthlyCheckPage() {
     <main className="min-h-screen bg-[#ffffff] px-4 py-8 md:py-12">
       <div className="max-w-3xl mx-auto">
 
+        {/* Back */}
+        <div className="mb-4">
+          <Link
+            href="/outflow"
+            className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
+          >
+            <i className="fa-solid fa-arrow-left text-xs" />
+            Back
+          </Link>
+        </div>
+
         {/* Header */}
         <div className="flex items-start justify-between mb-5">
           <div>
