@@ -327,7 +327,7 @@ export default function CreateExpensePage() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full rounded-lg bg-[#121358] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#4a9d81] disabled:opacity-50 transition-colors"
+            className="w-full rounded-lg bg-[#121358] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#6668a8] disabled:opacity-50 transition-colors"
           >
             {submitting ? 'Saving…' : 'Submit'}
           </button>

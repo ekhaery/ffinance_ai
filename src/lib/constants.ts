@@ -1,7 +1,7 @@
 // Color palette — https://colorhunt.co/palette/3f9aae79c9c5ffe2aff96e5b
 export const COLORS = {
   PRIMARY:    '#121358', // teal blue — buttons, active states, chips
-  SECONDARY:  '#79C9C5', // light teal — hover states
+  SECONDARY:  '#6668a8', // light teal — hover states
   BACKGROUND: '#F4B342', // warm peach — reserved / accent
   NAVBAR:     '#F96E5B', // coral orange — navbar
 } as const

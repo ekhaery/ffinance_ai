@@ -355,7 +355,7 @@ export default function ExpensesPage() {
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="flex-1 rounded-lg bg-[#121358] py-2.5 text-sm font-medium text-white hover:bg-[#4a9d81] disabled:opacity-50 transition-colors"
+                className="flex-1 rounded-lg bg-[#121358] py-2.5 text-sm font-medium text-white hover:bg-[#6668a8] disabled:opacity-50 transition-colors"
               >
                 {saving ? 'Saving…' : 'Save'}
               </button>

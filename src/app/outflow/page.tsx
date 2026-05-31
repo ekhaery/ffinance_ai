@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { FAMILY_MEMBERS, BALANCE_TYPES } from '@/lib/constants'
 
@@ -129,7 +130,7 @@ function ExpenseForm({ subcategories, accounts }: { subcategories: Subcategory[]
         <div className="relative" ref={nameRef}>
           <input type="text" maxLength={255} value={form.expense_name} onChange={(e) => setForm({ ...form, expense_name: e.target.value })}
             onFocus={() => nameSuggestions.length > 0 && setNameOpen(true)} placeholder="e.g. Monthly Netflix" autoComplete="off"
-            className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#121358] ${errors.expense_name ? 'border-[#FA6781]' : 'border-gray-300'}`} />
+            className={`w-full rounded-2xl border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#F4B342] ${errors.expense_name ? 'border-[#FA6781]' : 'border-[#F4B342]'}`} />
           {nameOpen && nameSuggestions.length > 0 && (
             <ul className="absolute z-30 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-52 overflow-y-auto text-sm">
               {nameSuggestions.map((name) => (
@@ -147,7 +148,7 @@ function ExpenseForm({ subcategories, accounts }: { subcategories: Subcategory[]
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Amount <span className="text-[#FA6781]">*</span></label>
         <input type="number" min={0} value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} placeholder="0"
-          className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#121358] ${errors.amount ? 'border-[#FA6781]' : 'border-gray-300'}`} />
+          className={`w-full rounded-2xl border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#F4B342] ${errors.amount ? 'border-[#FA6781]' : 'border-[#F4B342]'}`} />
         {errors.amount && <p className="mt-1 text-xs text-[#FA6781]">{errors.amount}</p>}
       </div>
 
@@ -157,7 +158,7 @@ function ExpenseForm({ subcategories, accounts }: { subcategories: Subcategory[]
         <div className="relative" ref={subRef}>
           <input type="text" value={subQuery} onChange={(e) => { setSubQuery(e.target.value); setForm((prev) => ({ ...prev, subcategory_id: '' })); setSubOpen(true) }}
             onFocus={() => setSubOpen(true)} placeholder="Type or select subcategory…" autoComplete="off"
-            className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#121358] ${errors.subcategory_id ? 'border-[#FA6781]' : 'border-gray-300'}`} />
+            className={`w-full rounded-2xl border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#F4B342] ${errors.subcategory_id ? 'border-[#FA6781]' : 'border-[#F4B342]'}`} />
           <button type="button" tabIndex={-1} onClick={() => setSubOpen((o) => !o)} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400">
             <svg className={`w-4 h-4 transition-transform ${subOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
@@ -187,8 +188,8 @@ function ExpenseForm({ subcategories, accounts }: { subcategories: Subcategory[]
         <div className="flex flex-wrap gap-2">
           {accounts.map((a) => (
             <button key={a.id} type="button" onClick={() => setForm((prev) => ({ ...prev, account_id: prev.account_id === String(a.id) ? '' : String(a.id) }))}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${form.account_id === String(a.id) ? 'bg-[#121358] border-[#121358] text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-[#121358] hover:text-[#121358]'}`}>
-              {a.name}
+              className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${form.account_id === String(a.id) ? 'bg-[#F4B342] border-[#F4B342] text-white' : 'bg-white border-[#F4B342] text-gray-700 hover:border-[#F4B342] hover:text-[#F4B342]'}`}>
+              {a.name.toUpperCase()}
             </button>
           ))}
         </div>
@@ -200,7 +201,7 @@ function ExpenseForm({ subcategories, accounts }: { subcategories: Subcategory[]
         <div className="flex flex-wrap gap-2">
           {FAMILY_MEMBERS.map((m) => (
             <button key={m} type="button" onClick={() => setForm((prev) => ({ ...prev, family_member: prev.family_member === m ? '' : m }))}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${form.family_member === m ? 'bg-[#121358] border-[#121358] text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-[#121358] hover:text-[#121358]'}`}>
+              className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${form.family_member === m ? 'bg-[#F4B342] border-[#F4B342] text-white' : 'bg-white border-[#F4B342] text-gray-700 hover:border-[#F4B342] hover:text-[#F4B342]'}`}>
               {m}
             </button>
           ))}
@@ -208,7 +209,7 @@ function ExpenseForm({ subcategories, accounts }: { subcategories: Subcategory[]
       </div>
 
       <button type="submit" disabled={submitting}
-        className="w-full rounded-lg bg-[#121358] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#4a9d81] disabled:opacity-50 transition-colors">
+        className="w-full rounded-lg bg-[#121358] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#6668a8] disabled:opacity-50 transition-colors">
         {submitting ? 'Saving…' : 'Submit'}
       </button>
     </form>
@@ -268,7 +269,7 @@ function TransferForm({ accounts, balances }: { accounts: Account[]; balances: R
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Amount <span className="text-[#FA6781]">*</span></label>
         <input type="number" min={0} value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0"
-          className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#121358] ${errors.amount ? 'border-[#FA6781]' : 'border-gray-300'}`} />
+          className={`w-full rounded-2xl border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#F4B342] ${errors.amount ? 'border-[#FA6781]' : 'border-[#F4B342]'}`} />
         {errors.amount && <p className="mt-1 text-xs text-[#FA6781]">{errors.amount}</p>}
       </div>
 
@@ -278,8 +279,8 @@ function TransferForm({ accounts, balances }: { accounts: Account[]; balances: R
         <div className="flex flex-wrap gap-2">
           {accounts.map((a) => (
             <button key={a.id} type="button" onClick={() => setFromId(fromId === a.id ? null : a.id)}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${fromId === a.id ? 'bg-[#121358] border-[#121358] text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-[#121358] hover:text-[#121358]'}`}>
-              {a.name}
+              className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${fromId === a.id ? 'bg-[#F4B342] border-[#F4B342] text-white' : 'bg-white border-[#F4B342] text-gray-700 hover:border-[#F4B342] hover:text-[#F4B342]'}`}>
+              {a.name.toUpperCase()}
             </button>
           ))}
         </div>
@@ -292,8 +293,8 @@ function TransferForm({ accounts, balances }: { accounts: Account[]; balances: R
         <div className="flex flex-wrap gap-2">
           {accounts.map((a) => (
             <button key={a.id} type="button" onClick={() => setToId(toId === a.id ? null : a.id)}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${toId === a.id ? 'bg-[#121358] border-[#121358] text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-[#121358] hover:text-[#121358]'}`}>
-              {a.name}
+              className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${toId === a.id ? 'bg-[#F4B342] border-[#F4B342] text-white' : 'bg-white border-[#F4B342] text-gray-700 hover:border-[#F4B342] hover:text-[#F4B342]'}`}>
+              {a.name.toUpperCase()}
             </button>
           ))}
         </div>
@@ -316,7 +317,7 @@ function TransferForm({ accounts, balances }: { accounts: Account[]; balances: R
       )}
 
       <button type="submit" disabled={submitting}
-        className="w-full rounded-lg bg-[#121358] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#4a9d81] disabled:opacity-50 transition-colors">
+        className="w-full rounded-lg bg-[#121358] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#6668a8] disabled:opacity-50 transition-colors">
         {submitting ? 'Memproses…' : 'Submit'}
       </button>
     </form>
@@ -337,31 +338,36 @@ export default function OutflowPage() {
   return (
     <main className="min-h-screen bg-[#ffffff] flex items-start justify-center pt-12 px-4 pb-16">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          {/* Tabs */}
-          <div className="flex border-b border-gray-100">
-            {tabs.map((t) => (
-              <button
-                key={t.key}
-                onClick={() => setActiveTab(t.key)}
-                className={`flex-1 py-3.5 text-sm font-medium transition-colors ${
-                  activeTab === t.key
-                    ? 'text-[#121358] border-b-2 border-[#121358] bg-white'
-                    : 'text-gray-500 hover:text-gray-700 bg-gray-50'
-                }`}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
+        {/* Segmented control */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-1.5 flex gap-1 mb-3">
+          {tabs.map((t) => (
+            <button
+              key={t.key}
+              onClick={() => setActiveTab(t.key)}
+              className={`flex-1 py-2 text-sm font-medium rounded-xl transition-colors ${
+                activeTab === t.key
+                  ? 'bg-slate-800 text-white'
+                  : 'text-slate-500 hover:bg-slate-100'
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
 
-          {/* Form content */}
-          <div className="p-6">
-            {activeTab === 'expense'
-              ? <ExpenseForm subcategories={subcategories} accounts={accounts} />
-              : <TransferForm accounts={accounts} balances={balances} />
-            }
-          </div>
+        {/* See Monthly Checklist shortcut */}
+        {activeTab === 'expense' && (
+          <Link href="/monthly-check" className="flex items-center justify-center gap-1.5 mb-3 w-full py-2 rounded-lg bg-[#F4B342] text-[#121358] text-sm font-semibold hover:bg-[#f0b93d] transition-colors">
+            See Monthly Checklist
+          </Link>
+        )}
+
+        {/* Form content */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          {activeTab === 'expense'
+            ? <ExpenseForm subcategories={subcategories} accounts={accounts} />
+            : <TransferForm accounts={accounts} balances={balances} />
+          }
         </div>
       </div>
     </main>

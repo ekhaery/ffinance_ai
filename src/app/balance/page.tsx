@@ -111,8 +111,8 @@ export default function BalancePage() {
       <div className="max-w-xl mx-auto">
         <div className="mb-6">
           <h1 className="text-xl font-semibold text-gray-900">Balance</h1>
-          <Link href="/expenses" className="inline-flex items-center gap-1.5 mr-2 mt-1.5 px-3 py-1 rounded-full border border-[#121358] bg-[#121358] text-white text-xs font-semibold hover:bg-[#79C9C5] hover:border-[#79C9C5] transition-colors">All History</Link>
-          <Link href="/monthly-check" className="inline-flex items-center gap-1.5 mt-1.5 px-3 py-1 rounded-full border border-[#121358] bg-[#121358] text-white text-xs font-semibold hover:bg-[#79C9C5] hover:border-[#79C9C5] transition-colors">Monthly Checklist</Link>
+          <Link href="/expenses" className="inline-flex items-center gap-1.5 mr-2 mt-1.5 px-3 py-1 rounded-full border border-[#121358] bg-[#121358] text-white text-xs font-semibold hover:bg-[#6668a8] hover:border-[#6668a8] transition-colors">All History</Link>
+          <Link href="/monthly-check" className="inline-flex items-center gap-1.5 mt-1.5 px-3 py-1 rounded-full border border-[#121358] bg-[#121358] text-white text-xs font-semibold hover:bg-[#6668a8] hover:border-[#6668a8] transition-colors">Monthly Checklist</Link>
         </div>
 
         {accounts.length === 0 ? (

@@ -39,7 +39,7 @@ export default function TemplateListPage() {
           <h1 className="text-xl md:text-2xl font-semibold text-gray-900">Templates</h1>
           <Link
             href="/templates/create"
-            className="rounded-lg bg-[#121358] px-3 py-2 md:px-4 text-sm font-medium text-white hover:bg-[#4a9d81] transition-colors"
+            className="rounded-lg bg-[#121358] px-3 py-2 md:px-4 text-sm font-medium text-white hover:bg-[#6668a8] transition-colors"
           >
             + New
           </Link>
