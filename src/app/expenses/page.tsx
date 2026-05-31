@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase'
 import { FAMILY_MEMBERS, BALANCE_TYPES } from '@/lib/constants'
 
 type Subcategory = { id: number; name: string; category_id: number }
-type Category = { id: number; name: string }
+type Category = { id: number; name: string; color: string }
 
 type Expense = {
   id: number
@@ -48,20 +48,25 @@ export default function ExpensesPage() {
   const [editForm, setEditForm] = useState<EditForm | null>(null)
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState<number | null>(null)
+  const [filterStart, setFilterStart] = useState('')
+  const [filterEnd, setFilterEnd] = useState('')
 
-  async function load() {
-    const { data } = await supabase
+  async function load(start?: string, end?: string) {
+    let query = supabase
       .from('expenses')
       .select('id, expense_name, amount, date, family_member, subcategory_id, account_id, balance_recorded, subcategories(name, categories(name)), accounts(name)')
       .order('date', { ascending: false })
       .order('id', { ascending: false })
+    if (start) query = query.gte('date', start)
+    if (end) query = query.lte('date', end)
+    const { data } = await query
     setExpenses((data as unknown as Expense[]) ?? [])
     setLoading(false)
   }
 
   useEffect(() => {
-    load()
-    supabase.from('categories').select('id, name').order('name').then(({ data }) => setCategories(data ?? []))
+    load(filterStart || undefined, filterEnd || undefined)
+    supabase.from('categories').select('id, name, color').order('name').then(({ data }) => setCategories(data ?? []))
     supabase.from('subcategories').select('id, name, category_id').order('name').then(({ data }) => setSubcategories(data ?? []))
     supabase.from('accounts').select('id, name').order('name').then(({ data }) => setAccounts(data ?? []))
     // Fetch current month income
@@ -167,25 +172,104 @@ export default function ExpensesPage() {
   }, {})
   const sortedDates = Object.keys(grouped).sort((a, b) => b.localeCompare(a))
 
+  // Summary: per-category totals and top expenses
+  const categoryTotals = categories.map((cat) => {
+    const catExpenses = expenses.filter((e) => e.subcategories?.categories?.name === cat.name)
+    const catTotal = catExpenses.reduce((s, e) => s + Number(e.amount), 0)
+    const pct = total > 0 ? Math.round((catTotal / total) * 100) : 0
+    // Top expense in this category
+    const top = [...catExpenses].sort((a, b) => Number(b.amount) - Number(a.amount))[0] ?? null
+    return { ...cat, catTotal, pct, top }
+  }).filter((c) => c.catTotal > 0)
+
   return (
     <main className="min-h-screen bg-[#ffffff] px-4 py-8">
       <div className="max-w-3xl mx-auto">
 
         {/* Header */}
-        <div className="mb-6">
+        <div className="mb-4">
           <div className="flex items-baseline gap-2">
             <h1 className="text-2xl font-bold text-gray-900">Expenses</h1>
             {!loading && expenses.length > 0 && (
               <span className="text-xs text-gray-500">| {expenses.length} record{expenses.length !== 1 ? 's' : ''}</span>
             )}
           </div>
-          {!loading && expenses.length > 0 && (
-            <span className="inline-flex items-center mt-1 px-3 py-0.5 rounded-full bg-[#F4B342] text-xs font-semibold text-[#121358]">
-              {total.toLocaleString('id-ID')}
-              {monthlyIncome > 0 && <span className="ml-1 opacity-70">({Math.round((total / monthlyIncome) * 100)}%)</span>}
-            </span>
+        </div>
+
+        {/* Date range filter */}
+        <div className="flex items-center gap-2 mb-3 flex-wrap">
+          <span className="text-xs font-semibold text-gray-500 shrink-0">Date</span>
+          <input
+            type="date"
+            value={filterStart}
+            onChange={(e) => { setFilterStart(e.target.value); setLoading(true); load(e.target.value || undefined, filterEnd || undefined) }}
+            className="rounded-xl border border-[#F4B342] px-2 py-1 text-xs outline-none focus:ring-2 focus:ring-[#F4B342] bg-white"
+          />
+          <span className="text-xs text-gray-400">–</span>
+          <input
+            type="date"
+            value={filterEnd}
+            onChange={(e) => { setFilterEnd(e.target.value); setLoading(true); load(filterStart || undefined, e.target.value || undefined) }}
+            className="rounded-xl border border-[#F4B342] px-2 py-1 text-xs outline-none focus:ring-2 focus:ring-[#F4B342] bg-white"
+          />
+          {(filterStart || filterEnd) && (
+            <button
+              onClick={() => { setFilterStart(''); setFilterEnd(''); setLoading(true); load() }}
+              className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              ✕ Clear
+            </button>
           )}
         </div>
+
+        {/* Summary card */}
+        {!loading && expenses.length > 0 && (
+          <div className="mb-5 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            {/* Total row */}
+            <div className="px-4 py-3 border-b border-gray-100 flex items-center gap-2 bg-[#121358]">
+              <span className="text-sm font-bold text-[#F4B342]">Total</span>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#F4B342] text-xs font-semibold text-[#121358]">
+                {total.toLocaleString('id-ID')}
+                {monthlyIncome > 0 && <span className="ml-1 opacity-70">({Math.round((total / monthlyIncome) * 100)}%)</span>}
+              </span>
+            </div>
+
+            {/* Left / Right panels */}
+            <div className="grid grid-cols-[2fr_3fr] divide-x divide-gray-100">
+              {/* Left: category percentages */}
+              <div className="px-4 py-3 space-y-2">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">By Category</p>
+                {categoryTotals.map((cat) => (
+                  <div key={cat.id}>
+                    <div className="flex items-center justify-between mb-0.5">
+                      <span className="text-xs font-medium" style={{ color: cat.color ?? '#6668a8' }}>{cat.name}</span>
+                      <span className="text-xs font-semibold text-gray-700">{cat.pct}%</span>
+                    </div>
+                    <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
+                      <div className="h-full rounded-full" style={{ width: `${cat.pct}%`, backgroundColor: cat.color ?? '#6668a8' }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Right: top expense per category */}
+              <div className="px-4 py-3 space-y-2">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Top per Category</p>
+                {categoryTotals.map((cat) => (
+                  cat.top ? (
+                    <div key={cat.id} className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="text-xs font-medium truncate" style={{ color: cat.color ?? '#6668a8' }}>{cat.name}</p>
+                        <p className="text-xs text-gray-700 truncate">{cat.top.expense_name}</p>
+                      </div>
+                      <span className="text-xs font-semibold text-gray-900 shrink-0">{Number(cat.top.amount).toLocaleString('id-ID')}</span>
+                    </div>
+                  ) : null
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {loading ? (
           <p className="text-sm text-gray-400">Loading…</p>
