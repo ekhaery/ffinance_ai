@@ -358,7 +358,7 @@ export default function OutflowPage() {
         {/* See Monthly Checklist shortcut */}
         {activeTab === 'expense' && (
           <Link href="/monthly-check" className="flex items-center justify-center gap-1.5 mb-3 w-full py-2 rounded-lg bg-[#F4B342] text-[#121358] text-sm font-semibold hover:bg-[#f0b93d] transition-colors">
-            See Monthly Checklist
+            <i className="fa-solid fa-calendar-check text-xs" /> See Monthly Checklist
           </Link>
         )}
 

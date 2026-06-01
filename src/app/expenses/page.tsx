@@ -188,12 +188,15 @@ export default function ExpensesPage() {
       <div className="max-w-3xl mx-auto">
 
         {/* Header */}
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-1 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-gray-900">Expenses</h1>
           <Link href="/expenses/report" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#121358] text-white text-xs font-semibold hover:bg-[#6668a8] transition-colors">
             <i className="fa-solid fa-chart-bar text-xs" />
             Report
           </Link>
+        </div>
+        <div className="mb-4">
+          <Link href="/monthly-check" className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#F4B342] bg-[#F4B342] text-[#121358] text-xs font-semibold hover:brightness-95 transition-colors"><i className="fa-solid fa-calendar-check text-xs" />Monthly Checklist</Link>
         </div>
 
         {/* Filter card */}
@@ -252,6 +255,14 @@ export default function ExpensesPage() {
             </>
           )}
         </div>
+
+        {/* Total summary below filter */}
+        {!loading && expenses.length > 0 && (
+          <div className="mb-4 flex justify-between items-center bg-[#121358] rounded-2xl px-4 py-3">
+            <span className="text-sm font-bold text-[#F4B342]">Total <span className="text-white/60 font-normal">| {expenses.length} record{expenses.length !== 1 ? 's' : ''}</span></span>
+            <span className="text-sm font-bold text-white">{total.toLocaleString('id-ID')}</span>
+          </div>
+        )}
 
         {loading ? (
           <p className="text-sm text-gray-400">Loading…</p>
@@ -331,11 +342,6 @@ export default function ExpensesPage() {
               )
             })}
 
-            {/* Grand total */}
-            <div className="flex justify-between items-center bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3">
-              <span className="text-sm font-semibold text-gray-700">Total</span>
-              <span className="text-sm font-bold text-gray-900">{total.toLocaleString('id-ID')}</span>
-            </div>
           </div>
         )}
       </div>
