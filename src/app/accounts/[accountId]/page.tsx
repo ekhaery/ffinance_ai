@@ -23,7 +23,7 @@ type ExpenseRow = {
   subcategories: { categories: { name: string } | null } | null
 }
 
-type RangeKey = 'today' | 'this_week' | 'this_month' | 'custom'
+type RangeKey = 'today' | 'this_week' | 'this_month' | 'last_month' | 'custom'
 
 const pad = (n: number) => String(n).padStart(2, '0')
 const ymd = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
@@ -38,6 +38,11 @@ function getRange(key: RangeKey, customStart: string, customEnd: string): { star
   if (key === 'this_month') {
     const start = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-01`
     const end = ymd(new Date(now.getFullYear(), now.getMonth() + 1, 0))
+    return { start, end }
+  }
+  if (key === 'last_month') {
+    const start = ymd(new Date(now.getFullYear(), now.getMonth() - 1, 1))
+    const end = ymd(new Date(now.getFullYear(), now.getMonth(), 0))
     return { start, end }
   }
   return { start: customStart, end: customEnd }
@@ -172,16 +177,15 @@ export default function AccountDetailPage() {
 
   // Summary metrics derived from filtered balance records
   const income      = filtered.filter(r => r.type === BALANCE_TYPES.INCOME || r.type === BALANCE_TYPES.TRANSFER_IN).reduce((s, r) => s + Number(r.amount), 0)
-  const transferOut = filtered.filter(r => r.type === BALANCE_TYPES.TRANSFER_OUT).reduce((s, r) => s + Math.abs(Number(r.amount)), 0)
-  const used        = filtered
-    .filter(r => r.type === BALANCE_TYPES.EXPENSE || r.type === BALANCE_TYPES.TRANSFER_OUT)
-    .reduce((s, r) => s + Math.abs(Number(r.amount)), 0)
+  const transferOut = Math.abs(filtered.filter(r => r.type === BALANCE_TYPES.TRANSFER_OUT).reduce((s, r) => s + Number(r.amount), 0))
+  const used        = Math.abs(filtered.filter(r => r.type === BALANCE_TYPES.EXPENSE).reduce((s, r) => s + Number(r.amount), 0))
 
 
   const rangeOptions: { key: RangeKey; label: string }[] = [
     { key: 'today',      label: 'Today' },
     { key: 'this_week',  label: '7d ago' },
     { key: 'this_month', label: 'This Month' },
+    { key: 'last_month', label: 'Last Month' },
     { key: 'custom',     label: 'Custom' },
   ]
 
@@ -291,9 +295,15 @@ export default function AccountDetailPage() {
                   {hideAmounts ? '****' : `${currentBalance < 0 ? '-' : ''}${fmt(currentBalance)}`}
                 </p>
               </div>
-              <div>
-                <p className="text-xs text-white/70 uppercase tracking-wide font-medium">Used</p>
-                <p className="text-base font-bold text-[#F4B342] mt-0.5">{hideAmounts ? '****' : fmt(used)}</p>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <p className="text-xs text-white/70 uppercase tracking-wide font-medium">Used</p>
+                  <p className="text-sm font-bold text-[#FA6781] mt-0.5">{hideAmounts ? '****' : fmt(used)}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-white/70 uppercase tracking-wide font-medium">Trf Out</p>
+                  <p className="text-sm font-bold text-[#F4B342] mt-0.5">{hideAmounts ? '****' : fmt(transferOut)}</p>
+                </div>
               </div>
               <div>
                 <p className="text-xs text-white/70 uppercase tracking-wide font-medium">Income</p>
@@ -309,15 +319,13 @@ export default function AccountDetailPage() {
                 return (
                   <div key={cat.id} className="flex items-center justify-between gap-2">
                     <span className="text-xs text-[#121358] truncate">{cat.name}</span>
-                    <span className="text-xs font-bold text-[#121358] shrink-0">{pct}% <span className="font-normal text-gray-500">| {amount.toLocaleString('id-ID')}</span></span>
+                    <span className="text-xs shrink-0 text-left"><span className="font-bold text-[#121358]">{pct}%</span><span className="text-gray-500"> | {amount.toLocaleString('id-ID')}</span></span>
                   </div>
                 )
               })}
               <div className="flex items-center justify-between gap-2">
                 <span className="text-xs text-[#121358] truncate">Other</span>
-                <span className="text-xs font-bold text-[#121358] shrink-0">
-                  {income > 0 ? Math.round((transferOut / income) * 100) : 0}% <span className="font-normal text-gray-500">| {transferOut.toLocaleString('id-ID')}</span>
-                </span>
+                <span className="text-xs shrink-0 text-left"><span className="font-bold text-[#121358]">{income > 0 ? Math.round((transferOut / income) * 100) : 0}%</span><span className="text-gray-500"> | {transferOut.toLocaleString('id-ID')}</span></span>
               </div>
             </div>
 
