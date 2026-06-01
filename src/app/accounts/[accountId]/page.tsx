@@ -229,16 +229,16 @@ export default function AccountDetailPage() {
               ))}
             </div>
             {rangeKey === 'custom' && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 bg-[#FFFDE1] rounded-2xl p-3">
-                <div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 bg-[#FFFDE1] rounded-2xl p-3 overflow-hidden">
+                <div className="min-w-0">
                   <label className="block text-xs font-semibold text-[#121358] mb-1">Start Date</label>
                   <input type="date" value={customStart} onChange={(e) => setCustomStart(e.target.value)}
-                    className="w-full rounded-full border border-[#121358] px-2 py-0.5 text-xs bg-white outline-none focus:ring-2 focus:ring-[#121358]" />
+                    className="w-full min-w-0 rounded-full border border-[#121358] px-2 py-0.5 text-xs bg-white outline-none focus:ring-2 focus:ring-[#121358]" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <label className="block text-xs font-semibold text-[#121358] mb-1">End Date</label>
                   <input type="date" value={customEnd} onChange={(e) => setCustomEnd(e.target.value)}
-                    className="w-full rounded-full border border-[#121358] px-2 py-0.5 text-xs bg-white outline-none focus:ring-2 focus:ring-[#121358]" />
+                    className="w-full min-w-0 rounded-full border border-[#121358] px-2 py-0.5 text-xs bg-white outline-none focus:ring-2 focus:ring-[#121358]" />
                 </div>
               </div>
             )}
