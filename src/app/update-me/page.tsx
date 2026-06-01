@@ -45,7 +45,7 @@ export default function UpdateMePage() {
         supabase.from('accounts').select('id, name'),
       ])
 
-      const exps = (expData ?? []) as Expense[]
+      const exps = (expData ?? []) as unknown as Expense[]
       setExpenses(exps)
 
       const map: Record<number, string> = {}
