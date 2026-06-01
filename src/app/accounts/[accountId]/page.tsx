@@ -216,7 +216,7 @@ export default function AccountDetailPage() {
         {/* Time Range + Category — single card */}
         <div className="bg-[#F4B342] rounded-2xl shadow-sm overflow-hidden">
           {/* Card header */}
-          <div className="bg-[#121358] px-5 py-3">
+          <div className="bg-[#6668a8] px-5 py-3">
             <p className="text-base font-semibold text-white uppercase">{account?.name ?? '…'}</p>
             {account?.description && <p className="text-xs text-white/60 lowercase"><span className="font-bold">|</span> {account.description}</p>}
           </div>
@@ -289,6 +289,7 @@ export default function AccountDetailPage() {
                   {filteredTotal < 0 ? '−' : '+'}{Math.abs(filteredTotal).toLocaleString('id-ID')}
                 </span>
               </div>
+
             </div>
           )
         })()}

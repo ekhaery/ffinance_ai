@@ -131,10 +131,10 @@ export default function BalancePage() {
                 <div
                   key={a.id}
                   onClick={() => router.push(`/accounts/${a.id}`)}
-                  className={`bg-white rounded-2xl border-2 ${isAmberHeader ? 'border-[#F4B342]' : 'border-[#121358]'} border-t-4 border-t-gray-300 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-all`}
+                  className={`bg-white rounded-2xl border-2 ${isAmberHeader ? 'border-[#F4B342]' : 'border-[#6668a8]'} border-t-4 border-t-gray-300 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-all`}
                 >
                   {/* Card header — alternates dark navy / amber */}
-                  <div className={`${isAmberHeader ? 'bg-[#F4B342]' : 'bg-[#121358]'} px-4 py-3 flex items-start justify-between`}>
+                  <div className={`${isAmberHeader ? 'bg-[#F4B342]' : 'bg-[#6668a8]'} px-4 py-3 flex items-start justify-between`}>
                     <div>
                       <p className={`text-base font-semibold uppercase ${isAmberHeader ? 'text-[#121358]' : 'text-white'}`}>{a.name}</p>
                       {a.description && (
