@@ -14,16 +14,44 @@ type Expense = {
   subcategories: { name: string; categories: { name: string } }
 }
 
+type RangeKey = 'today' | 'this_week' | 'this_month' | 'last_month' | 'custom'
+const pad = (n: number) => String(n).padStart(2, '0')
+const ymd = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+function getRange(key: RangeKey, customStart: string, customEnd: string) {
+  const now = new Date()
+  if (key === 'today') { const t = ymd(now); return { start: t, end: t } }
+  if (key === 'this_week') {
+    const from = new Date(now); from.setDate(now.getDate() - 7)
+    return { start: ymd(from), end: ymd(now) }
+  }
+  if (key === 'this_month') {
+    const start = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-01`
+    const end = ymd(new Date(now.getFullYear(), now.getMonth() + 1, 0))
+    return { start, end }
+  }
+  if (key === 'last_month') {
+    const start = ymd(new Date(now.getFullYear(), now.getMonth() - 1, 1))
+    const end = ymd(new Date(now.getFullYear(), now.getMonth(), 0))
+    return { start, end }
+  }
+  return { start: customStart, end: customEnd }
+}
+
 export default function ExpenseReportPage() {
   const [expenses, setExpenses] = useState<Expense[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [monthlyIncome, setMonthlyIncome] = useState(0)
   const [loading, setLoading] = useState(true)
-  const [filterStart, setFilterStart] = useState('')
-  const [filterEnd, setFilterEnd] = useState('')
+  const [rangeKey, setRangeKey] = useState<RangeKey>('this_month')
+  // 'today' is not used in report, but kept in RangeKey for type compatibility
+  const [customStart, setCustomStart] = useState('')
+  const [customEnd, setCustomEnd] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('')
   const [hideTotal, setHideTotal] = useState(true)
 
-  async function load(start?: string, end?: string) {
+  async function load(rKey = rangeKey, cStart = customStart, cEnd = customEnd, cat = selectedCategory) {
+    setLoading(true)
+    const { start, end } = getRange(rKey, cStart, cEnd)
     let query = supabase
       .from('expenses')
       .select('id, expense_name, amount, date, subcategory_id, subcategories(name, categories(name))')
@@ -31,7 +59,9 @@ export default function ExpenseReportPage() {
     if (start) query = query.gte('date', start)
     if (end) query = query.lte('date', end)
     const { data } = await query
-    setExpenses((data as unknown as Expense[]) ?? [])
+    let rows = (data as unknown as Expense[]) ?? []
+    if (cat) rows = rows.filter(e => e.subcategories?.categories?.name === cat)
+    setExpenses(rows)
     setLoading(false)
   }
 
@@ -61,6 +91,13 @@ export default function ExpenseReportPage() {
     return { ...cat, catTotal, pct, top }
   }).filter((c) => c.catTotal > 0)
 
+  const rangeOptions: { key: RangeKey; label: string }[] = [
+    { key: 'this_week',  label: '7d ago' },
+    { key: 'this_month', label: 'This Month' },
+    { key: 'last_month', label: 'Last Month' },
+    { key: 'custom',     label: 'Custom' },
+  ]
+
   return (
     <main className="min-h-screen bg-[#ffffff] px-4 py-8">
       <div className="max-w-3xl mx-auto">
@@ -77,29 +114,60 @@ export default function ExpenseReportPage() {
           <h1 className="text-xl font-bold text-gray-900">Report</h1>
         </div>
 
-        {/* Date range filter */}
-        <div className="flex items-center gap-2 mb-4 flex-wrap">
-          <span className="text-xs font-semibold text-gray-500 shrink-0">Date</span>
-          <input
-            type="date"
-            value={filterStart}
-            onChange={(e) => { setFilterStart(e.target.value); setLoading(true); load(e.target.value || undefined, filterEnd || undefined) }}
-            className="rounded-xl border border-[#F4B342] px-2 py-1 text-xs outline-none focus:ring-2 focus:ring-[#F4B342] bg-white"
-          />
-          <span className="text-xs text-gray-400">–</span>
-          <input
-            type="date"
-            value={filterEnd}
-            onChange={(e) => { setFilterEnd(e.target.value); setLoading(true); load(filterStart || undefined, e.target.value || undefined) }}
-            className="rounded-xl border border-[#F4B342] px-2 py-1 text-xs outline-none focus:ring-2 focus:ring-[#F4B342] bg-white"
-          />
-          {(filterStart || filterEnd) && (
-            <button
-              onClick={() => { setFilterStart(''); setFilterEnd(''); setLoading(true); load() }}
-              className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              ✕ Clear
-            </button>
+        {/* Filter card */}
+        <div className="mb-5 bg-[#F4B342] rounded-2xl shadow-sm overflow-hidden">
+          <div className="bg-[#121358] px-5 py-3">
+            <p className="text-base font-semibold text-white uppercase"><i className="fa-solid fa-arrow-trend-up mr-2" />Financial Insight</p>
+          </div>
+          <div className="px-5 py-4 space-y-3">
+            <p className="text-sm font-bold text-[#121358]">Time Range</p>
+            <div className="flex flex-wrap gap-2">
+              {rangeOptions.map((o) => (
+                <button
+                  key={o.key}
+                  onClick={() => { setRangeKey(o.key); load(o.key, customStart, customEnd, selectedCategory) }}
+                  className={`px-2.5 py-1 rounded-full text-xs font-medium border transition-colors ${
+                    rangeKey === o.key
+                      ? 'bg-[#121358] border-[#121358] text-white'
+                      : 'bg-white border-gray-300 text-gray-700 hover:border-[#121358] hover:text-[#121358]'
+                  }`}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+            {rangeKey === 'custom' && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#FFFDE1] rounded-2xl p-3 overflow-hidden">
+                <div className="min-w-0">
+                  <label className="block text-xs font-semibold text-[#121358] mb-1">Start Date</label>
+                  <input type="date" value={customStart} onChange={(e) => { setCustomStart(e.target.value); load(rangeKey, e.target.value, customEnd, selectedCategory) }}
+                    className="w-full min-w-0 rounded-full border border-[#121358] px-2 py-0.5 text-xs bg-white outline-none focus:ring-2 focus:ring-[#121358]" />
+                </div>
+                <div className="min-w-0">
+                  <label className="block text-xs font-semibold text-[#121358] mb-1">End Date</label>
+                  <input type="date" value={customEnd} onChange={(e) => { setCustomEnd(e.target.value); load(rangeKey, customStart, e.target.value, selectedCategory) }}
+                    className="w-full min-w-0 rounded-full border border-[#121358] px-2 py-0.5 text-xs bg-white outline-none focus:ring-2 focus:ring-[#121358]" />
+                </div>
+              </div>
+            )}
+          </div>
+          {categories.length > 0 && (
+            <>
+              <div className="border-t-2 border-white mx-5" />
+              <div className="px-5 py-4 flex items-center gap-3">
+                <p className="text-sm font-bold text-[#121358] shrink-0">Category</p>
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => { setSelectedCategory(e.target.value); load(rangeKey, customStart, customEnd, e.target.value) }}
+                  className="w-full rounded-full border border-[#121358] px-4 py-1.5 text-sm text-gray-700 bg-white outline-none focus:ring-2 focus:ring-[#121358]"
+                >
+                  <option value="">All</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.name}>{cat.name}</option>
+                  ))}
+                </select>
+              </div>
+            </>
           )}
         </div>
 
