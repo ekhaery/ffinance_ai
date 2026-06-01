@@ -92,8 +92,6 @@ function ExpenseForm({ subcategories, accounts }: { subcategories: Subcategory[]
     const e: Record<string, string> = {}
     if (!form.expense_name.trim()) e.expense_name = 'Expense name is required.'
     else if (form.expense_name.length > 255) e.expense_name = 'Maximum 255 characters.'
-    if (!form.amount) e.amount = 'Amount is required.'
-    else if (Number(form.amount) <= 0) e.amount = 'Amount must be greater than 0.'
     if (!form.subcategory_id) e.subcategory_id = 'Subcategory is required.'
     return e
   }
@@ -103,15 +101,16 @@ function ExpenseForm({ subcategories, accounts }: { subcategories: Subcategory[]
     const errs = validate()
     if (Object.keys(errs).length) { setErrors(errs); return }
     setErrors({}); setSubmitting(true)
+    const hasAmount = form.amount !== '' && Number(form.amount) > 0
     const { data: newExpense, error } = await supabase.from('expenses').insert({
-      expense_name: form.expense_name.trim(), amount: Number(form.amount),
+      expense_name: form.expense_name.trim(), amount: hasAmount ? Number(form.amount) : null,
       subcategory_id: Number(form.subcategory_id), family_member: form.family_member || null,
       account_id: form.account_id ? Number(form.account_id) : null,
-      balance_recorded: !!form.account_id,
+      balance_recorded: hasAmount && !!form.account_id,
     }).select('id').single()
     setSubmitting(false)
     if (error) { setErrors({ submit: error.message }); return }
-    if (form.account_id) {
+    if (form.account_id && hasAmount) {
       await supabase.from('balance').insert({ account_id: Number(form.account_id), amount: -Number(form.amount), type: BALANCE_TYPES.EXPENSE, date: new Date().toISOString().slice(0, 10), expense_id: newExpense?.id ?? null })
     }
     setSuccess(true)
@@ -146,8 +145,8 @@ function ExpenseForm({ subcategories, accounts }: { subcategories: Subcategory[]
 
       {/* Amount */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Amount <span className="text-[#FA6781]">*</span></label>
-        <input type="number" min={0} value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} placeholder="0"
+        <label className="block text-sm font-medium text-gray-700 mb-1">Amount <span className="text-gray-400 font-normal text-xs">(optional)</span></label>
+        <input type="number" min={0} value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} placeholder="Leave blank if unknown"
           className={`w-full rounded-2xl border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#F4B342] ${errors.amount ? 'border-[#FA6781]' : 'border-[#F4B342]'}`} />
         {errors.amount && <p className="mt-1 text-xs text-[#FA6781]">{errors.amount}</p>}
       </div>

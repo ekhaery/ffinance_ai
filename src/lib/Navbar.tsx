@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 
 const chevron = (open: boolean) => (
   <svg className={`w-3.5 h-3.5 transition-transform ${open ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
@@ -14,6 +15,7 @@ export default function Navbar() {
   const pathname = usePathname()
   const [settingOpen, setSettingOpen] = useState(false)
   const settingRef = useRef<HTMLDivElement>(null)
+  const [pendingCount, setPendingCount] = useState(0)
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -24,6 +26,18 @@ export default function Navbar() {
   }, [])
 
   useEffect(() => { setSettingOpen(false) }, [pathname])
+
+  // Fetch pending (no-amount) expense count
+  useEffect(() => {
+    async function fetchPending() {
+      const { count } = await supabase
+        .from('expenses')
+        .select('id', { count: 'exact', head: true })
+        .or('amount.is.null,amount.eq.0')
+      setPendingCount(count ?? 0)
+    }
+    fetchPending()
+  }, [pathname])
 
   const isActive = (path: string) => pathname === path
 
@@ -41,6 +55,21 @@ export default function Navbar() {
         <div className="flex items-center gap-1 flex-1 justify-end">
           <Link href="/accounts" className={linkClass('/accounts')}><i className="fa-solid fa-credit-card" /></Link>
           <Link href="/expenses" className={linkClass('/expenses')}><i className="fa-solid fa-arrow-rotate-left" /></Link>
+
+          {/* Update Me! */}
+          <Link
+            href="/update-me"
+            className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+              pathname.startsWith('/update-me') ? 'bg-white/20 text-[#ffffff]' : 'text-[#ffffff]/90 hover:bg-white/10 hover:text-[#ffffff]'
+            }`}
+          >
+            <i className="fa-solid fa-circle-exclamation" />
+            {pendingCount > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-[#FA6781] text-white text-[10px] font-bold px-1 leading-none">
+                {pendingCount}
+              </span>
+            )}
+          </Link>
 
           {/* Setting dropdown */}
           <div className="relative" ref={settingRef}>

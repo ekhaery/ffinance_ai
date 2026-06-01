@@ -121,8 +121,6 @@ export default function CreateExpensePage() {
     const e: Record<string, string> = {}
     if (!form.expense_name.trim()) e.expense_name = 'Expense name is required.'
     else if (form.expense_name.length > 255) e.expense_name = 'Maximum 255 characters.'
-    if (!form.amount) e.amount = 'Amount is required.'
-    else if (Number(form.amount) <= 0) e.amount = 'Amount must be greater than 0.'
     if (!form.subcategory_id) e.subcategory_id = 'Subcategory is required.'
     return e
   }
@@ -133,19 +131,20 @@ export default function CreateExpensePage() {
     if (Object.keys(errs).length) { setErrors(errs); return }
     setErrors({})
     setSubmitting(true)
+    const hasAmount = form.amount !== '' && Number(form.amount) > 0
     const { data: newExpense, error } = await supabase.from('expenses').insert({
       expense_name: form.expense_name.trim(),
-      amount: Number(form.amount),
+      amount: hasAmount ? Number(form.amount) : null,
       subcategory_id: Number(form.subcategory_id),
       family_member: form.family_member || null,
       account_id: form.account_id ? Number(form.account_id) : null,
-      balance_recorded: !!form.account_id,
+      balance_recorded: hasAmount && !!form.account_id,
     }).select('id').single()
     setSubmitting(false)
     if (error) { setErrors({ submit: error.message }); return }
 
-    // Deduct from account balance
-    if (form.account_id) {
+    // Deduct from account balance only if amount is provided
+    if (form.account_id && hasAmount) {
       await supabase.from('balance').insert({
         account_id: Number(form.account_id),
         amount: -Number(form.amount),
@@ -215,14 +214,14 @@ export default function CreateExpensePage() {
           {/* Amount */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Amount <span className="text-[#FA6781]">*</span>
+              Amount <span className="text-gray-400 font-normal text-xs">(optional)</span>
             </label>
             <input
               type="number"
               min={0}
               value={form.amount}
               onChange={(e) => setForm({ ...form, amount: e.target.value })}
-              placeholder="0"
+              placeholder="Leave blank if unknown"
               className={`w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#121358] ${errors.amount ? 'border-[#FA6781]' : 'border-gray-300'}`}
             />
             {errors.amount && <p className="mt-1 text-xs text-[#FA6781]">{errors.amount}</p>}
