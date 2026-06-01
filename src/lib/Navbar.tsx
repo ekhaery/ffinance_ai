@@ -53,8 +53,7 @@ export default function Navbar() {
 
         {/* Links — always visible */}
         <div className="flex items-center gap-1 flex-1 justify-end">
-          <Link href="/accounts" className={linkClass('/accounts')}><i className="fa-solid fa-credit-card" /></Link>
-          <Link href="/expenses" className={linkClass('/expenses')}><i className="fa-solid fa-arrow-rotate-left" /></Link>
+          <Link href="/expenses" className="px-3 py-1.5 rounded-md text-sm font-medium transition-colors bg-[#F4B342] text-[#121358] hover:bg-[#f0b93d]"><i className="fa-regular fa-file-lines" /></Link>
 
           {/* Update Me! */}
           <Link
@@ -70,6 +69,8 @@ export default function Navbar() {
               </span>
             )}
           </Link>
+
+          <Link href="/accounts" className={linkClass('/accounts')}><i className="fa-solid fa-credit-card" /></Link>
 
           {/* Setting dropdown */}
           <div className="relative" ref={settingRef}>
