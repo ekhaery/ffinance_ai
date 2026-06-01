@@ -42,7 +42,7 @@ export default function ViewTemplatePage() {
         {/* Back */}
         <div className="mb-4">
           <Link
-            href="/templates"
+            href="/budget-plan"
             className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
           >
             <i className="fa-solid fa-arrow-left text-xs" />

@@ -77,7 +77,7 @@ export default function Navbar() {
             <button
               onClick={() => setSettingOpen((o) => !o)}
               className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                pathname.startsWith('/settings') || pathname.startsWith('/templates')
+                pathname.startsWith('/settings') || pathname.startsWith('/templates') || pathname.startsWith('/budget-plan')
                   ? 'bg-white/20 text-[#ffffff]'
                   : 'text-[#ffffff]/90 hover:bg-white/10 hover:text-[#ffffff]'
               }`}
@@ -86,7 +86,7 @@ export default function Navbar() {
             </button>
             {settingOpen && (
               <div className="absolute right-0 top-full mt-1 w-44 bg-white rounded-lg border border-gray-200 shadow-lg py-1 z-50">
-                <Link href="/templates" onClick={() => setSettingOpen(false)} className={`block px-4 py-2 text-sm ${pathname.startsWith('/templates') ? 'text-[#121358] bg-[#121358]/10' : 'text-gray-700 hover:bg-gray-50'}`}>Templates</Link>
+                <Link href="/budget-plan" onClick={() => setSettingOpen(false)} className={`block px-4 py-2 text-sm ${pathname.startsWith('/budget-plan') || pathname.startsWith('/templates') ? 'text-[#121358] bg-[#121358]/10' : 'text-gray-700 hover:bg-gray-50'}`}>Budget Plan</Link>
                 <Link href="/settings/categories" onClick={() => setSettingOpen(false)} className={`block px-4 py-2 text-sm ${pathname.startsWith('/settings/categories') ? 'text-[#121358] bg-[#121358]/10' : 'text-gray-700 hover:bg-gray-50'}`}>Category</Link>
                 <Link href="/settings/subcategories" onClick={() => setSettingOpen(false)} className={`block px-4 py-2 text-sm ${pathname.startsWith('/settings/subcategories') ? 'text-[#121358] bg-[#121358]/10' : 'text-gray-700 hover:bg-gray-50'}`}>Subcategory</Link>
                 <Link href="/settings/accounts" onClick={() => setSettingOpen(false)} className={`block px-4 py-2 text-sm ${pathname.startsWith('/settings/accounts') ? 'text-[#121358] bg-[#121358]/10' : 'text-gray-700 hover:bg-gray-50'}`}>Account</Link>
