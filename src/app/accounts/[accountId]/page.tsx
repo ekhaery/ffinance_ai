@@ -278,6 +278,21 @@ export default function AccountDetailPage() {
           )}
         </div>
 
+        {/* Balance bar */}
+        {!loading && displayRecords.length > 0 && (() => {
+          const filteredTotal = displayRecords.reduce((s, r) => s + Number(r.amount), 0)
+          return (
+            <div className="space-y-1">
+              <div className="flex justify-between items-center bg-[#121358] rounded-2xl px-4 py-3">
+                <span className="text-sm font-bold text-[#F4B342]">Balance <span className="text-white/60 font-normal">| {displayRecords.length} record{displayRecords.length !== 1 ? 's' : ''}</span></span>
+                <span className={`text-sm font-bold ${filteredTotal < 0 ? 'text-[#FA6781]' : 'text-[#F4B342]'}`}>
+                  {filteredTotal < 0 ? '−' : '+'}{Math.abs(filteredTotal).toLocaleString('id-ID')}
+                </span>
+              </div>
+            </div>
+          )
+        })()}
+
         {/* Summary section — two cards side by side */}
         {!loading && (
           <div className="grid grid-cols-5 gap-3">
@@ -286,18 +301,16 @@ export default function AccountDetailPage() {
             <div className="col-span-2 bg-[#121358] rounded-2xl shadow-sm px-4 py-4 space-y-3">
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-white/70 uppercase tracking-wide font-medium">Balance</p>
+                  <p className="text-xs text-white/70 uppercase tracking-wide font-medium">Used</p>
                   <button onClick={() => setHideAmounts(h => !h)} className="text-white/60 hover:text-white transition-colors">
                     <i className={`fa-solid ${hideAmounts ? 'fa-eye' : 'fa-eye-slash'} text-xs`} />
                   </button>
                 </div>
-                <p className={`text-base font-bold mt-0.5 ${currentBalance < 0 ? 'text-[#FA6781]' : 'text-white'}`}>
-                  {hideAmounts ? '****' : `${currentBalance < 0 ? '-' : ''}${fmt(currentBalance)}`}
-                </p>
+                <p className="text-base font-bold text-[#FA6781] mt-0.5">{hideAmounts ? '****' : fmt(used)}</p>
               </div>
               <div>
-                <p className="text-xs text-white/70 uppercase tracking-wide font-medium">Used</p>
-                <p className="text-base font-bold text-[#FA6781] mt-0.5">{hideAmounts ? '****' : fmt(used)}</p>
+                <p className="text-xs text-white/70 uppercase tracking-wide font-medium">TRF OUT</p>
+                <p className="text-base font-bold text-[#F4B342] mt-0.5">{hideAmounts ? '****' : fmt(transferOut)}</p>
               </div>
               <div>
                 <p className="text-xs text-white/70 uppercase tracking-wide font-medium">Income</p>
@@ -326,27 +339,6 @@ export default function AccountDetailPage() {
           </div>
         )}
 
-        {/* Total bar */}
-        {!loading && displayRecords.length > 0 && (() => {
-          const filteredTotal = displayRecords.reduce((s, r) => s + Number(r.amount), 0)
-          const filteredTrfOut = Math.abs(displayRecords.filter(r => r.type === BALANCE_TYPES.TRANSFER_OUT).reduce((s, r) => s + Number(r.amount), 0))
-          return (
-            <div className="space-y-1">
-              <div className="flex justify-between items-center bg-[#121358] rounded-2xl px-4 py-3">
-                <span className="text-sm font-bold text-[#F4B342]">Total <span className="text-white/60 font-normal">| {displayRecords.length} record{displayRecords.length !== 1 ? 's' : ''}</span></span>
-                <span className={`text-sm font-bold ${filteredTotal < 0 ? 'text-[#FA6781]' : 'text-white'}`}>
-                  {filteredTotal < 0 ? '−' : '+'}{Math.abs(filteredTotal).toLocaleString('id-ID')}
-                </span>
-              </div>
-              {filteredTrfOut > 0 && (
-                <div className="flex justify-between items-center bg-[#121358]/80 rounded-2xl px-4 py-2">
-                  <span className="text-xs font-semibold text-white/70">TRF OUT</span>
-                  <span className="text-xs font-bold text-[#F4B342]">{filteredTrfOut.toLocaleString('id-ID')}</span>
-                </div>
-              )}
-            </div>
-          )
-        })()}
 
 
         {/* Transaction list */}
