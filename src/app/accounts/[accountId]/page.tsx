@@ -189,7 +189,7 @@ export default function AccountDetailPage() {
     <main className="min-h-screen bg-[#ffffff] px-4 py-8">
       <div className="max-w-3xl mx-auto space-y-5">
 
-        {/* Back + title */}
+        {/* Back + title + Add Income */}
         <div className="flex items-center justify-between">
           <button
             onClick={() => router.push('/accounts')}
@@ -199,6 +199,13 @@ export default function AccountDetailPage() {
             Back
           </button>
           <h1 className="text-xl font-semibold text-gray-900">Account Detail</h1>
+          <button
+            onClick={() => setShowIncomeModal(true)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#121358] text-white text-xs font-semibold hover:bg-[#6668a8] transition-colors"
+          >
+            <i className="fa-solid fa-plus text-xs" />
+            Add Income
+          </button>
         </div>
 
         {/* Time range filter */}
@@ -317,18 +324,19 @@ export default function AccountDetailPage() {
           </div>
         )}
 
-        {/* Income button */}
-        {!loading && (
-          <div className="flex justify-end">
-            <button
-              onClick={() => setShowIncomeModal(true)}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#121358] text-white text-sm font-semibold hover:bg-[#6668a8] transition-colors"
-            >
-              <i className="fa-solid fa-plus text-xs" />
-              Add Income
-            </button>
-          </div>
-        )}
+        {/* Total bar */}
+        {!loading && displayRecords.length > 0 && (() => {
+          const filteredTotal = displayRecords.reduce((s, r) => s + Number(r.amount), 0)
+          return (
+            <div className="flex justify-between items-center bg-[#121358] rounded-2xl px-4 py-3">
+              <span className="text-sm font-bold text-[#F4B342]">Total <span className="text-white/60 font-normal">| {displayRecords.length} record{displayRecords.length !== 1 ? 's' : ''}</span></span>
+              <span className={`text-sm font-bold ${filteredTotal < 0 ? 'text-[#FA6781]' : 'text-white'}`}>
+                {filteredTotal < 0 ? '−' : '+'}{Math.abs(filteredTotal).toLocaleString('id-ID')}
+              </span>
+            </div>
+          )
+        })()}
+
 
         {/* Transaction list */}
         {loading ? (
