@@ -15,5 +15,6 @@ export type Template = {
   template_name: string
   is_used: boolean
   created_at: string
+  order: number | null
   template_details: { amount: number }[]
 }
