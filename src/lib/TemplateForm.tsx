@@ -90,7 +90,7 @@ export default function TemplateForm({ initialName = '', initialRows, initialIsU
 
     setSubmitting(false)
     setSuccess(true)
-    setTimeout(() => router.push('/templates'), 1200)
+    setTimeout(() => router.push('/budget-plan'), 1200)
   }
 
   return (
@@ -256,7 +256,7 @@ export default function TemplateForm({ initialName = '', initialRows, initialIsU
         </button>
         <button
           type="button"
-          onClick={() => router.push('/templates')}
+          onClick={() => router.push('/budget-plan')}
           className="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
         >
           Cancel

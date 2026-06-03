@@ -87,6 +87,7 @@ export default function AccountDetailPage() {
   const [customEnd, setCustomEnd]       = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [hideAmounts, setHideAmounts] = useState(true)
+  const [showIncomeList, setShowIncomeList] = useState(false)
   const [showIncomeModal, setShowIncomeModal] = useState(false)
   const [incomeAmount, setIncomeAmount] = useState('')
   const [incomeDate, setIncomeDate] = useState(new Date().toISOString().slice(0, 10))
@@ -341,6 +342,46 @@ export default function AccountDetailPage() {
         )}
 
 
+
+        {/* Income dropdown */}
+        {!loading && filtered.length > 0 && (() => {
+          const incomeRecords = filtered.filter(r => r.type === BALANCE_TYPES.INCOME || r.type === BALANCE_TYPES.TRANSFER_IN)
+          if (incomeRecords.length === 0) return null
+          return (
+            <div className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
+              <button
+                onClick={() => setShowIncomeList(o => !o)}
+                className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors"
+              >
+                <span className="text-sm font-semibold text-[#121358]">
+                  Income
+                  <span className="ml-2 text-xs font-normal text-gray-400">| {incomeRecords.length} record{incomeRecords.length !== 1 ? 's' : ''}</span>
+                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-[#121358]">
+                    {hideAmounts ? '****' : income.toLocaleString('id-ID')}
+                  </span>
+                  <i className={`fa-solid fa-chevron-down text-xs text-gray-400 transition-transform ${showIncomeList ? 'rotate-180' : ''}`} />
+                </div>
+              </button>
+              {showIncomeList && (
+                <div className="border-t border-gray-100 divide-y divide-gray-50">
+                  {incomeRecords.map((r) => (
+                    <div key={r.id} className="flex items-center justify-between px-4 py-2.5">
+                      <div>
+                        <p className="text-xs font-medium text-gray-700">{getTypeLabel(r.type)}</p>
+                        <p className="text-xs text-gray-400">{formatDate(r.date)}</p>
+                      </div>
+                      <span className="text-xs font-semibold text-[#121358]">
+                        {hideAmounts ? '****' : Number(r.amount).toLocaleString('id-ID')}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )
+        })()}
 
         {/* Transaction list */}
         {loading ? (
